@@ -1,0 +1,67 @@
+import type { Metadata } from "next";
+
+import { PageContainer } from "@/components/layout/page-container";
+import { TeacherCard } from "@/components/teacher-card/teacher-card";
+import { buildMetadata, siteConfig } from "@/lib/seo";
+import { getTeachers } from "@/lib/teachers";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Top Teachers for JEE, NEET and Board Exam Coaching",
+  description:
+    "Meet Tareshwar Tutorials faculty for JEE, NEET, and board exam coaching, with experienced mentors focused on results and student confidence.",
+  keywords: [
+    "jee teachers",
+    "neet faculty",
+    "board exam mentors",
+    "online coaching teachers",
+    "exam preparation faculty"
+  ],
+  path: "/teachers"
+});
+
+export default async function TeachersPage() {
+  const teachers = await getTeachers();
+
+  const teachersJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Tareshwar Tutorials Teachers",
+    itemListElement: teachers.map((teacher, index) => ({
+      "@type": "Person",
+      position: index + 1,
+      name: teacher.name,
+      description: teacher.bio,
+      image: teacher.photo,
+      worksFor: {
+        "@type": "EducationalOrganization",
+        name: siteConfig.name
+      }
+    }))
+  };
+
+  return (
+    <PageContainer as="section" className="py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(teachersJsonLd) }}
+      />
+      <div className="max-w-3xl">
+        <span className="inline-flex rounded-full bg-teal/10 px-4 py-2 text-sm font-semibold text-teal">
+          Mentor Network
+        </span>
+        <h1 className="mt-6 font-heading text-5xl font-bold tracking-tight text-ink">
+          Learn from faculty who combine exam strategy, empathy, and real classroom momentum.
+        </h1>
+      </div>
+      <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        {teachers.length ? (
+          teachers.map((teacher) => <TeacherCard key={teacher.id} teacher={teacher} />)
+        ) : (
+          <div className="rounded-4xl border border-ink/10 bg-white p-8 text-slate shadow-glow md:col-span-2 xl:col-span-3">
+            Teacher profiles will appear here when published courses are linked to faculty records in Supabase.
+          </div>
+        )}
+      </div>
+    </PageContainer>
+  );
+}
