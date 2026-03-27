@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Mail, Phone, Clock } from "lucide-react";
 
 import { buildMetadata } from "@/lib/seo";
+import { ContactForm } from "./contact-form";
 
 export const metadata: Metadata = buildMetadata({
   title: "Contact Tareshwar Tutorials",
@@ -24,47 +26,23 @@ export default function ContactPage() {
           <p className="mt-5 text-lg leading-8 text-slate">
             Reach out for course guidance, partnership inquiries, school tie-ups, or parent support.
           </p>
-          <div className="mt-8 space-y-4 text-base text-slate">
-            <p>Email: support@tareshwartutorials.com</p>
-            <p>Phone: +91 98765 43210</p>
-            <p>Hours: Mon-Sat, 9:00 AM - 7:00 PM IST</p>
+          <div className="mt-8 space-y-4">
+            <div className="flex items-center gap-3 text-base text-slate">
+              <Mail className="h-5 w-5 text-coral shrink-0" />
+              <span>support@tareshwartutorials.com</span>
+            </div>
+            <div className="flex items-center gap-3 text-base text-slate">
+              <Phone className="h-5 w-5 text-coral shrink-0" />
+              <span>+91 98765 43210</span>
+            </div>
+            <div className="flex items-center gap-3 text-base text-slate">
+              <Clock className="h-5 w-5 text-coral shrink-0" />
+              <span>Mon–Sat, 9:00 AM – 7:00 PM IST</span>
+            </div>
           </div>
         </div>
 
-        <form className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
-          <div className="grid gap-5">
-            <label className="grid gap-2 text-sm font-medium text-ink">
-              Full name
-              <input
-                type="text"
-                placeholder="Enter your name"
-                className="rounded-2xl border border-ink/10 px-4 py-3 outline-none transition focus:border-coral"
-              />
-            </label>
-            <label className="grid gap-2 text-sm font-medium text-ink">
-              Email
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="rounded-2xl border border-ink/10 px-4 py-3 outline-none transition focus:border-coral"
-              />
-            </label>
-            <label className="grid gap-2 text-sm font-medium text-ink">
-              Message
-              <textarea
-                rows={5}
-                placeholder="Tell us how we can help"
-                className="rounded-2xl border border-ink/10 px-4 py-3 outline-none transition focus:border-coral"
-              />
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="mt-6 inline-flex rounded-full bg-ink px-6 py-3 font-semibold text-white transition hover:bg-ink/90"
-          >
-            Send Inquiry
-          </button>
-        </form>
+        <ContactForm />
       </div>
     </section>
   );

@@ -31,11 +31,16 @@ function formatDate(value: string | null) {
 }
 
 export async function generateStaticParams() {
-  const courses = await getCourses();
-
-  return courses.map((course) => ({
-    slug: `${course.id}--${course.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`
-  }));
+  try {
+    const courses = await getCourses();
+    return courses.map((course) => ({
+      slug: `${course.id}--${course.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`
+    }));
+  } catch {
+    // Admin client not available at build time (missing SUPABASE_SERVICE_ROLE_KEY).
+    // Pages will be generated on-demand instead.
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: CoursePageProps): Promise<Metadata> {

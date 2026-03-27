@@ -30,8 +30,7 @@ export default async function TeachersPage() {
       "@type": "Person",
       position: index + 1,
       name: teacher.name,
-      description: teacher.bio,
-      image: teacher.photo,
+      image: teacher.avatarUrl ?? undefined,
       worksFor: {
         "@type": "EducationalOrganization",
         name: siteConfig.name
