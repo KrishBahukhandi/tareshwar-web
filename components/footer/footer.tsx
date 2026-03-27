@@ -24,7 +24,7 @@ export function Footer() {
             </p>
             <div className="mt-6 space-y-3 text-sm text-slate">
               <p>support@tareshwartutorials.com</p>
-              <p>+91 98765 43210</p>
+              <p>+91 62805 54348</p>
               <p>Mon-Sat, 9:00 AM - 7:00 PM IST</p>
             </div>
           </div>

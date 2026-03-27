@@ -33,7 +33,7 @@ export default function ContactPage() {
             </div>
             <div className="flex items-center gap-3 text-base text-slate">
               <Phone className="h-5 w-5 text-coral shrink-0" />
-              <span>+91 98765 43210</span>
+              <span>+91 62805 54348</span>
             </div>
             <div className="flex items-center gap-3 text-base text-slate">
               <Clock className="h-5 w-5 text-coral shrink-0" />
