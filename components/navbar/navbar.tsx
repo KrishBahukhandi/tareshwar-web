@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { PageContainer } from "@/components/layout/page-container";
@@ -12,13 +13,18 @@ const navLinks = [
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-ink/8 bg-cream/90 backdrop-blur-xl">
-      <PageContainer className="py-3">
+      <PageContainer className="py-2">
         <div className="flex items-center justify-between gap-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink text-sm font-bold text-white">
-              TT
-            </div>
+            <Image
+              src="/logo.jpg"
+              alt="Tareshwar Tutorials"
+              width={44}
+              height={44}
+              className="rounded-lg object-contain"
+              priority
+            />
             <span className="font-heading text-base font-bold text-ink">Tareshwar Tutorials</span>
           </Link>
 

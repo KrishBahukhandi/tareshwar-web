@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { PageContainer } from "@/components/layout/page-container";
@@ -8,10 +9,16 @@ export function Footer() {
       <PageContainer className="py-12">
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <span className="inline-flex rounded-full bg-teal/10 px-4 py-2 text-sm font-semibold text-teal">
-              Stay Connected
-            </span>
-            <h2 className="font-heading text-2xl font-bold text-ink">Tareshwar Tutorials</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <Image
+                src="/logo.jpg"
+                alt="Tareshwar Tutorials"
+                width={52}
+                height={52}
+                className="rounded-xl object-contain"
+              />
+              <h2 className="font-heading text-2xl font-bold text-ink">Tareshwar Tutorials</h2>
+            </div>
             <p className="mt-4 max-w-xl text-base leading-7 text-slate">
               A modern EdTech platform for ambitious learners seeking better coaching, stronger results, and a clearer study journey.
             </p>
