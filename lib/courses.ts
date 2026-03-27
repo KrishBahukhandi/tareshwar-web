@@ -254,78 +254,78 @@ export { slugifyCourseTitle, getCoursePath, getCourseIdFromSlug };
 // Static demo courses — shown when no Supabase data is available (e.g. during preview or first deploy)
 export const STATIC_COURSES: Course[] = [
   {
-    id: "jee-mastery",
-    title: "JEE Mastery Program",
+    id: "class-9-10-science",
+    title: "Class 9 & 10 Science Mastery",
     description:
-      "A rigorous PCM track with concept-first live classes, weekly tests, and mistake analysis for JEE Mains & Advanced aspirants.",
-    teacherId: "rohan-verma",
-    teacherName: "Rohan Verma",
-    teacherAvatarUrl:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
-    price: 24999,
-    lectureCount: 48,
-    thumbnail:
-      "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80",
-    category: "JEE",
-    totalStudents: 2400,
-    rating: 4.9,
-    createdAt: "2024-01-01T00:00:00Z",
-    activeBatchCount: 2,
-    nextBatchDate: "2026-05-01",
-    curriculum: [
-      { id: "s1", subject: "Physics", chapters: ["Kinematics", "Laws of Motion", "Work & Energy"], lectures: 18 },
-      { id: "s2", subject: "Chemistry", chapters: ["Atomic Structure", "Chemical Bonding", "Thermodynamics"], lectures: 15 },
-      { id: "s3", subject: "Mathematics", chapters: ["Functions", "Calculus", "Coordinate Geometry"], lectures: 15 }
-    ]
-  },
-  {
-    id: "neet-momentum",
-    title: "NEET Momentum Batch",
-    description:
-      "High-impact biology, chemistry, and physics preparation with live doubt support and fast-recall revision decks for NEET.",
+      "Concept-first Physics, Chemistry, and Biology coaching for CBSE Class 9 and 10 students. Includes chapter tests, answer-writing practice, and doubt support.",
     teacherId: "kavya-sharma",
     teacherName: "Dr. Kavya Sharma",
     teacherAvatarUrl:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-    price: 22499,
-    lectureCount: 42,
+    price: 8999,
+    lectureCount: 60,
     thumbnail:
-      "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1200&q=80",
-    category: "NEET",
-    totalStudents: 1800,
-    rating: 4.8,
-    createdAt: "2024-01-15T00:00:00Z",
-    activeBatchCount: 1,
-    nextBatchDate: "2026-05-15",
+      "https://images.unsplash.com/photo-1532094349884-543559059a1a?auto=format&fit=crop&w=1200&q=80",
+    category: "Class 9-10",
+    totalStudents: 3200,
+    rating: 4.9,
+    createdAt: "2024-01-01T00:00:00Z",
+    activeBatchCount: 3,
+    nextBatchDate: "2026-05-01",
     curriculum: [
-      { id: "s4", subject: "Biology", chapters: ["Human Physiology", "Genetics", "Ecology"], lectures: 20 },
-      { id: "s5", subject: "Chemistry", chapters: ["Organic Basics", "Biomolecules", "Equilibrium"], lectures: 12 },
-      { id: "s6", subject: "Physics", chapters: ["Current Electricity", "Optics", "Modern Physics"], lectures: 10 }
+      { id: "s1", subject: "Physics", chapters: ["Motion", "Force & Laws of Motion", "Light — Reflection & Refraction"], lectures: 20 },
+      { id: "s2", subject: "Chemistry", chapters: ["Matter in Our Surroundings", "Atoms & Molecules", "Chemical Reactions"], lectures: 20 },
+      { id: "s3", subject: "Biology", chapters: ["Cell — The Fundamental Unit", "Life Processes", "Control & Coordination"], lectures: 20 }
     ]
   },
   {
-    id: "boards-excellence",
-    title: "Boards Excellence Program",
+    id: "class-11-12-maths",
+    title: "Class 11 & 12 Mathematics",
     description:
-      "Board-focused coaching with chapter mastery, answer-writing practice, and monthly parent progress reports for Class 12.",
+      "Structured Mathematics coaching for Class 11 and 12 CBSE students. Covers calculus, algebra, and coordinate geometry with weekly tests and teacher-reviewed answers.",
+    teacherId: "rohan-verma",
+    teacherName: "Rohan Verma",
+    teacherAvatarUrl:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    price: 12999,
+    lectureCount: 72,
+    thumbnail:
+      "https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?auto=format&fit=crop&w=1200&q=80",
+    category: "Class 11-12",
+    totalStudents: 2100,
+    rating: 4.8,
+    createdAt: "2024-01-15T00:00:00Z",
+    activeBatchCount: 2,
+    nextBatchDate: "2026-05-10",
+    curriculum: [
+      { id: "s4", subject: "Algebra", chapters: ["Relations & Functions", "Sequences & Series", "Binomial Theorem"], lectures: 24 },
+      { id: "s5", subject: "Calculus", chapters: ["Limits & Derivatives", "Continuity", "Integrals"], lectures: 24 },
+      { id: "s6", subject: "Coordinate Geometry", chapters: ["Straight Lines", "Circles", "Conic Sections"], lectures: 24 }
+    ]
+  },
+  {
+    id: "class-8-10-foundation",
+    title: "Class 8-10 Foundation Program",
+    description:
+      "All-subjects foundation coaching for Class 8, 9, and 10 students. Build strong basics in Maths, Science, and English before boards with structured live classes.",
     teacherId: "ananya-iyer",
     teacherName: "Ananya Iyer",
     teacherAvatarUrl:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
-    price: 14999,
-    lectureCount: 36,
+    price: 6999,
+    lectureCount: 48,
     thumbnail:
       "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80",
-    category: "Class 12 Boards",
-    totalStudents: 3100,
+    category: "Foundation",
+    totalStudents: 4100,
     rating: 4.8,
     createdAt: "2024-02-01T00:00:00Z",
-    activeBatchCount: 3,
+    activeBatchCount: 4,
     nextBatchDate: "2026-04-28",
     curriculum: [
-      { id: "s7", subject: "Mathematics", chapters: ["Algebra", "Probability", "Calculus"], lectures: 12 },
-      { id: "s8", subject: "Science", chapters: ["Electricity", "Acids & Bases", "Life Processes"], lectures: 12 },
-      { id: "s9", subject: "Exam Writing", chapters: ["Answer Framing", "Time Management", "Revision"], lectures: 12 }
+      { id: "s7", subject: "Mathematics", chapters: ["Algebra", "Mensuration", "Data Handling"], lectures: 16 },
+      { id: "s8", subject: "Science", chapters: ["Matter & Energy", "Living World", "Natural Phenomena"], lectures: 16 },
+      { id: "s9", subject: "English", chapters: ["Grammar Essentials", "Reading Comprehension", "Writing Skills"], lectures: 16 }
     ]
   }
 ];

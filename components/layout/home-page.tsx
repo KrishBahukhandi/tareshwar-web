@@ -27,13 +27,13 @@ type HomePageProps = {
   teachers: TeacherProfile[];
 };
 
-const EXAM_TAGS = ["JEE Mains & Advanced", "NEET", "Class 12 CBSE", "State Boards", "Foundation"];
+const EXAM_TAGS = ["Class 8", "Class 9", "Class 10", "Class 11", "Class 12 CBSE", "State Boards"];
 
 const HOW_IT_WORKS = [
   {
     step: "01",
-    title: "Choose your course",
-    desc: "Browse batches for your exam. Check the curriculum, teacher profile, and batch schedule. Pick what fits your timeline and budget."
+    title: "Choose your class and subject",
+    desc: "Browse batches for your child's class — from Class 8 Foundation to Class 12 Boards. Check the curriculum, teacher profile, and batch schedule."
   },
   {
     step: "02",
@@ -42,41 +42,41 @@ const HOW_IT_WORKS = [
   },
   {
     step: "03",
-    title: "Track, practice, improve",
-    desc: "Attend live classes, take weekly mocks, resolve doubts in under 2 hours. Watch your score and rank move week over week."
+    title: "Track progress, resolve doubts, improve marks",
+    desc: "Attend live classes, take chapter tests, resolve doubts in under 2 hours. Watch your child's marks and confidence grow each month."
   }
 ];
 
 const DIFFERENTIATORS = [
   {
     icon: Clock,
-    title: "Doubt resolved in < 2 hrs",
-    desc: "No waiting 24 hours. Faculty respond during study hours so you never stay stuck on a concept before a test."
+    title: "Doubts resolved in < 2 hrs",
+    desc: "No waiting a day. Faculty respond during study hours so students never stay stuck before a chapter test or board exam."
   },
   {
     icon: Trophy,
-    title: "Weekly rank analytics",
-    desc: "Know exactly where you stand with test score trends, subject-wise breakdowns, and rank improvement tracking."
+    title: "Chapter-wise test analytics",
+    desc: "Know exactly which chapters need more attention with score trends, subject-wise breakdowns, and improvement tracking every week."
   },
   {
     icon: Users,
     title: "Batch-based accountability",
-    desc: "Study alongside peers at your level. Batch mates, leaderboards, and regular teacher check-ins keep you consistent."
+    desc: "Students study alongside peers at the same class level. Batch mates, leaderboards, and teacher check-ins build consistency."
   },
   {
     icon: BookOpen,
-    title: "Structured revision cycles",
-    desc: "Built-in revision calendars, spaced repetition decks, and chapter mastery checkpoints — not just content dumps."
+    title: "Structured revision before boards",
+    desc: "Built-in revision calendars, chapter mastery checkpoints, and board-pattern practice tests — not just content delivery."
   },
   {
     icon: Zap,
     title: "Live + recorded, always",
-    desc: "Every live class is recorded. Miss a session? Watch it the same evening. Never fall behind your batch."
+    desc: "Every live class is recorded. Miss a session? Watch it the same evening. Students never fall behind the class schedule."
   },
   {
     icon: MessageCircle,
-    title: "Monthly parent reports",
-    desc: "Summaries sent to parents each month. They stay informed without pressure, you stay focused without interruptions."
+    title: "Monthly parent progress reports",
+    desc: "Detailed summaries sent to parents every month — marks, attendance, weak areas, and teacher notes. Full visibility, no surprises."
   }
 ];
 
@@ -100,10 +100,10 @@ export function HomePage({ courses, teachers }: HomePageProps) {
             </div>
 
             <h1 className="mt-5 max-w-3xl font-heading text-5xl font-bold tracking-tight sm:text-6xl">
-              Crack JEE, NEET &amp; Boards with India&apos;s most trusted online coaching.
+              Score higher in Class 8 to 12 with India&apos;s most trusted school coaching.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/80">
-              Live classes, personal doubt support in under 2 hours, and real mock test analytics — all in one platform built around how toppers actually study.
+              Live classes, personal doubt support in under 2 hours, and real chapter-test analytics — all in one platform built for school students who want consistent marks and real understanding.
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -141,8 +141,8 @@ export function HomePage({ courses, teachers }: HomePageProps) {
           <div className="grid gap-4">
             <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur">
               <p className="text-sm uppercase tracking-[0.18em] text-white/60">Live right now</p>
-              <p className="mt-2 text-lg font-semibold">JEE Physics — Current Electricity</p>
-              <p className="mt-1 text-sm text-white/70">with Rohan Verma · 847 students attending</p>
+              <p className="mt-2 text-lg font-semibold">Class 10 Science — Chemical Reactions</p>
+              <p className="mt-1 text-sm text-white/70">with Dr. Kavya Sharma · 847 students attending</p>
               <div className="mt-5 flex items-center gap-2">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-green-400" />
                 <span className="text-sm font-medium text-green-400">Class in progress</span>
@@ -188,7 +188,7 @@ export function HomePage({ courses, teachers }: HomePageProps) {
             How It Works
           </span>
           <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight text-ink">
-            From sign-up to your first rank improvement in 3 steps.
+            From enrollment to your child&apos;s first marks improvement in 3 steps.
           </h2>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -210,7 +210,7 @@ export function HomePage({ courses, teachers }: HomePageProps) {
               Featured Courses
             </span>
             <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight text-ink">
-              Structured batches for every exam, every stage.
+              Structured batches for Class 8 to 12 — every subject, every stage.
             </h2>
           </div>
           <Link href="/courses" className="font-semibold text-teal hover:text-teal/80">
@@ -232,10 +232,10 @@ export function HomePage({ courses, teachers }: HomePageProps) {
               Why Students Choose Us
             </span>
             <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight text-cream">
-              Not just content. A system that produces real results.
+              Not just video lessons. A system built for real school results.
             </h2>
             <p className="mt-4 text-base leading-7 text-cream/70">
-              Other platforms upload videos. We build accountability, feedback loops, and learning structures that make the difference between knowing a concept and scoring on it.
+              Other platforms upload videos. We build accountability, feedback loops, and revision structures that make the difference between a student who watches and a student who actually scores.
             </p>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -316,7 +316,7 @@ export function HomePage({ courses, teachers }: HomePageProps) {
             FAQ
           </span>
           <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight text-ink">
-            Questions parents and students ask before enrolling.
+            Questions parents ask before enrolling their child.
           </h2>
         </div>
         <div className="mt-10">
@@ -389,10 +389,10 @@ export function HomePage({ courses, teachers }: HomePageProps) {
       <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
         <div className="rounded-[2.75rem] bg-coral px-8 py-14 text-center text-white shadow-glow lg:px-16">
           <h2 className="font-heading text-5xl font-bold tracking-tight">
-            Your exam is closer than you think.
+            Your child&apos;s board result is closer than you think.
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">
-            Join 12,000+ students who chose structured coaching over scattered self-study. The next batch is filling up — enroll today and lock your spot.
+            Join 12,000+ school students who chose structured coaching over scattered self-study. The next batch is filling up — enroll today and lock your spot.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link

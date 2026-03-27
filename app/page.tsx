@@ -6,15 +6,18 @@ import { buildMetadata } from "@/lib/seo";
 import { getTeachers, STATIC_TEACHERS } from "@/lib/teachers";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Online Coaching for JEE, NEET and Board Exam Preparation",
+  title: "Online Coaching for Class 8 to 12 School Students",
   description:
-    "Join Tareshwar Tutorials for online exam preparation with live classes, expert teachers, structured courses, and study resources for JEE, NEET, and board exams.",
+    "Join Tareshwar Tutorials for Class 8 to 12 school coaching with live classes, expert teachers, and structured study programs for CBSE and state board students.",
   keywords: [
-    "online coaching",
-    "jee preparation",
-    "neet preparation",
-    "board exam coaching",
-    "exam preparation platform"
+    "class 8 online coaching",
+    "class 9 coaching",
+    "class 10 coaching",
+    "class 11 coaching",
+    "class 12 coaching",
+    "cbse online coaching",
+    "school tuition online",
+    "board exam preparation"
   ],
   path: "/"
 });

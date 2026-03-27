@@ -48,7 +48,7 @@ export const STATIC_TEACHERS: TeacherProfile[] = [
     name: "Dr. Kavya Sharma",
     avatarUrl:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-    primaryCategory: "NEET",
+    primaryCategory: "Class 9-10 Science",
     courseCount: 2,
     totalStudents: 6500
   },
@@ -57,7 +57,7 @@ export const STATIC_TEACHERS: TeacherProfile[] = [
     name: "Rohan Verma",
     avatarUrl:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
-    primaryCategory: "JEE",
+    primaryCategory: "Class 11-12 Mathematics",
     courseCount: 2,
     totalStudents: 5200
   },
@@ -66,7 +66,7 @@ export const STATIC_TEACHERS: TeacherProfile[] = [
     name: "Ananya Iyer",
     avatarUrl:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
-    primaryCategory: "Class 12 Boards",
+    primaryCategory: "Class 8-10 Foundation",
     courseCount: 1,
     totalStudents: 4100
   }

@@ -5,28 +5,28 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    q: "What exams do Tareshwar Tutorials courses cover?",
-    a: "We offer batches for JEE Mains, JEE Advanced, NEET, Class 12 CBSE, and several state board exams. Each course is structured around that exam's specific pattern, marking scheme, and commonly tested concepts."
+    q: "Which classes and subjects do Tareshwar Tutorials cover?",
+    a: "We offer live coaching for Class 8 through Class 12 across core CBSE and state board subjects — Mathematics, Science (Physics, Chemistry, Biology), English, and Social Science. Each batch is structured around the specific class's syllabus and exam pattern."
   },
   {
     q: "Are the classes live or recorded?",
-    a: "Every batch includes live classes taught by faculty in real time. All sessions are recorded and available in your dashboard the same evening, so if you miss a class you can catch up without falling behind."
+    a: "Every batch includes live classes taught by faculty in real time. All sessions are recorded and available in your dashboard the same evening, so if your child misses a class they can catch up without falling behind."
   },
   {
     q: "How does doubt resolution work?",
-    a: "Students can submit doubts through the platform or app and get a faculty response within 2 hours during study hours (Mon–Sat, 9 AM–9 PM IST). Doubts raised before an exam are prioritised."
+    a: "Students can submit doubts through the platform or app and get a faculty response within 2 hours during study hours (Mon–Sat, 9 AM–9 PM IST). Doubts close to tests and board exams are prioritised."
   },
   {
-    q: "Can I access courses on my phone?",
-    a: "Yes. All content is available on the Tareshwar Tutorials Flutter app for Android and iOS. Your progress, notes, and recordings are synced in real time across the app and web dashboard."
+    q: "Is this suitable for Class 8 and 9 students, not just board classes?",
+    a: "Yes. We specifically offer Foundation batches for Class 8, 9, and 10 to build strong subject basics before boards. Starting early gives students a significant advantage by the time they reach Class 10 and 12."
   },
   {
-    q: "What happens immediately after I pay?",
-    a: "You'll receive enrollment confirmation and batch joining instructions instantly. You get full access to your student dashboard, all published recordings, and live class links — no waiting period."
+    q: "What happens immediately after enrollment?",
+    a: "Enrollment confirmation and batch joining instructions are sent instantly. Students get full access to their dashboard, all published recordings for their batch, and live class schedule — with no waiting period."
   },
   {
     q: "Is there a refund policy?",
-    a: "Yes. We offer a 7-day refund if you're not satisfied after joining. Submit your request through the contact page or email support@tareshwartutorials.com and it'll be processed within 3 business days."
+    a: "Yes. We offer a 7-day refund if you are not satisfied after joining. Submit your request through the contact page or email support@tareshwartutorials.com and it will be processed within 3 business days."
   }
 ];
 

@@ -259,19 +259,19 @@ export const testimonials = [
     name: "Saanvi Patel",
     role: "Class 12 Student",
     quote:
-      "The dashboard kept me accountable, and the teachers explained concepts until I genuinely understood them."
+      "The dashboard kept me accountable, and the teachers explained every concept until I genuinely understood it. My board scores improved significantly."
   },
   {
     name: "Rahul Singh",
-    role: "NEET Aspirant",
+    role: "Class 10 Student",
     quote:
-      "I loved how quickly doubts were resolved. The test analysis helped me fix weak chapters instead of guessing."
+      "I loved how quickly doubts were resolved. The chapter-wise test analysis helped me fix weak topics before the board exams instead of guessing."
   },
   {
     name: "Meera Nair",
     role: "Parent",
     quote:
-      "It finally felt like we had visibility into our child’s progress. The support team was responsive and warm."
+      "It finally felt like we had real visibility into our child’s progress. The monthly reports and responsive support team made all the difference."
   }
 ];
 

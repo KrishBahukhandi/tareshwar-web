@@ -7,15 +7,16 @@ import { getCourses } from "@/lib/courses";
 import { buildMetadata, siteConfig } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Courses for JEE, NEET and Board Exam Preparation",
+  title: "Courses for Class 8 to 12 — CBSE and State Board Students",
   description:
-    "Explore exam preparation courses for JEE, NEET, and board exams with expert faculty, structured lectures, and student progress tracking.",
+    "Explore school coaching courses for Class 8 to 12 with expert faculty, structured live classes, and student progress tracking for CBSE and state boards.",
   keywords: [
-    "online coaching courses",
-    "jee course online",
-    "neet course online",
-    "board exam preparation courses",
-    "exam preparation classes"
+    "class 8 to 12 coaching courses",
+    "cbse online courses",
+    "class 10 board preparation",
+    "class 12 board preparation",
+    "school tuition online",
+    "foundation course class 8 9 10"
   ],
   path: "/courses"
 });
