@@ -9,20 +9,20 @@ import { siteConfig } from "@/lib/seo";
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | Online Coaching for JEE, NEET and Board Exams`,
+    default: `${siteConfig.name} | Online Coaching for Class 8 to 12 School Students`,
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
   openGraph: {
     siteName: siteConfig.name,
     type: "website",
-    title: `${siteConfig.name} | Online Coaching for JEE, NEET and Board Exams`,
+    title: `${siteConfig.name} | Online Coaching for Class 8 to 12 School Students`,
     description: siteConfig.description,
     url: siteConfig.url
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | Online Coaching for JEE, NEET and Board Exams`,
+    title: `${siteConfig.name} | Online Coaching for Class 8 to 12 School Students`,
     description: siteConfig.description
   }
 };

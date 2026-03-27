@@ -6,15 +6,15 @@ import { buildMetadata, siteConfig } from "@/lib/seo";
 import { getTeachers } from "@/lib/teachers";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Top Teachers for JEE, NEET and Board Exam Coaching",
+  title: "Meet Our Teachers — Class 8 to 12 School Coaching Faculty",
   description:
-    "Meet Tareshwar Tutorials faculty for JEE, NEET, and board exam coaching, with experienced mentors focused on results and student confidence.",
+    "Meet Tareshwar Tutorials faculty — experienced teachers for Class 8 to 12 CBSE coaching in Maths, Science, and all subjects. Results-focused mentors.",
   keywords: [
-    "jee teachers",
-    "neet faculty",
-    "board exam mentors",
-    "online coaching teachers",
-    "exam preparation faculty"
+    "class 10 maths teacher online",
+    "class 12 science coaching faculty",
+    "cbse school coaching teachers",
+    "online school tuition teachers",
+    "class 8 to 12 coaching mentors"
   ],
   path: "/teachers"
 });

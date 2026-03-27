@@ -7,15 +7,15 @@ import { getBlogPosts } from "@/lib/blog";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Exam Preparation Blog for JEE, NEET and Board Exams",
+  title: "Study Tips & Exam Guides for Class 8 to 12 Students",
   description:
-    "Read exam preparation articles on JEE, NEET, and board exams designed to attract organic traffic and help students study more effectively.",
+    "Read practical study guides and exam tips for Class 8, 9, 10, 11, and 12 students — covering board preparation, subject strategies, and parenting advice.",
   keywords: [
-    "exam preparation blog",
-    "jee preparation articles",
-    "neet preparation blog",
-    "board exam tips",
-    "organic study content"
+    "class 10 board exam tips",
+    "class 12 study tips",
+    "cbse exam preparation blog",
+    "school coaching articles",
+    "board exam preparation guide"
   ],
   path: "/blog"
 });
@@ -27,13 +27,13 @@ export default function BlogListPage() {
     <PageContainer as="section" className="py-20">
       <div className="max-w-4xl">
         <span className="inline-flex rounded-full bg-coral/10 px-4 py-2 text-sm font-semibold text-coral">
-          Exam Prep Blog
+          Study & Exam Blog
         </span>
         <h1 className="mt-6 font-heading text-5xl font-bold tracking-tight text-ink">
-          SEO-focused exam preparation content that helps students study smarter and discover the right coaching support.
+          Guides for Class 8 to 12 students — from building strong basics to acing your board exams.
         </h1>
         <p className="mt-5 text-lg leading-8 text-slate">
-          Explore articles built around the questions students actually search for, from JEE study plans and NEET biology revision to board exam time management.
+          Practical articles on study habits, subject strategies, revision planning, and how parents can help — written by Tareshwar Tutorials faculty.
         </p>
       </div>
 
