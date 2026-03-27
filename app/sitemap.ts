@@ -1,12 +1,16 @@
 import type { MetadataRoute } from "next";
 
 import { getBlogPosts } from "@/lib/blog";
-import { getCourses } from "@/lib/courses";
+import { getCourses, STATIC_COURSES } from "@/lib/courses";
 import { getCoursePath } from "@/lib/course-paths";
 import { siteConfig } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [courses, posts] = await Promise.all([getCourses(), Promise.resolve(getBlogPosts())]);
+  const [coursesResult, posts] = await Promise.all([
+    getCourses().catch(() => STATIC_COURSES),
+    Promise.resolve(getBlogPosts())
+  ]);
+  const courses = coursesResult.length ? coursesResult : STATIC_COURSES;
 
   const staticRoutes = [
     "",
