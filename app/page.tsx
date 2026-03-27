@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 import { HomePage } from "@/components/layout/home-page";
-import { getCourses } from "@/lib/courses";
+import { getCourses, STATIC_COURSES } from "@/lib/courses";
 import { buildMetadata } from "@/lib/seo";
-import { getTeachers } from "@/lib/teachers";
+import { getTeachers, STATIC_TEACHERS } from "@/lib/teachers";
 
 export const metadata: Metadata = buildMetadata({
   title: "Online Coaching for JEE, NEET and Board Exam Preparation",
@@ -22,5 +22,10 @@ export const metadata: Metadata = buildMetadata({
 export default async function Page() {
   const [courses, teachers] = await Promise.all([getCourses(), getTeachers()]);
 
-  return <HomePage courses={courses} teachers={teachers} />;
+  return (
+    <HomePage
+      courses={courses.length ? courses : STATIC_COURSES}
+      teachers={teachers.length ? teachers : STATIC_TEACHERS}
+    />
+  );
 }

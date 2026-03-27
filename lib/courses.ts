@@ -250,3 +250,82 @@ export async function getCourseById(id: string) {
 }
 
 export { slugifyCourseTitle, getCoursePath, getCourseIdFromSlug };
+
+// Static demo courses — shown when no Supabase data is available (e.g. during preview or first deploy)
+export const STATIC_COURSES: Course[] = [
+  {
+    id: "jee-mastery",
+    title: "JEE Mastery Program",
+    description:
+      "A rigorous PCM track with concept-first live classes, weekly tests, and mistake analysis for JEE Mains & Advanced aspirants.",
+    teacherId: "rohan-verma",
+    teacherName: "Rohan Verma",
+    teacherAvatarUrl:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    price: 24999,
+    lectureCount: 48,
+    thumbnail:
+      "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80",
+    category: "JEE",
+    totalStudents: 2400,
+    rating: 4.9,
+    createdAt: "2024-01-01T00:00:00Z",
+    activeBatchCount: 2,
+    nextBatchDate: "2026-05-01",
+    curriculum: [
+      { id: "s1", subject: "Physics", chapters: ["Kinematics", "Laws of Motion", "Work & Energy"], lectures: 18 },
+      { id: "s2", subject: "Chemistry", chapters: ["Atomic Structure", "Chemical Bonding", "Thermodynamics"], lectures: 15 },
+      { id: "s3", subject: "Mathematics", chapters: ["Functions", "Calculus", "Coordinate Geometry"], lectures: 15 }
+    ]
+  },
+  {
+    id: "neet-momentum",
+    title: "NEET Momentum Batch",
+    description:
+      "High-impact biology, chemistry, and physics preparation with live doubt support and fast-recall revision decks for NEET.",
+    teacherId: "kavya-sharma",
+    teacherName: "Dr. Kavya Sharma",
+    teacherAvatarUrl:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+    price: 22499,
+    lectureCount: 42,
+    thumbnail:
+      "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1200&q=80",
+    category: "NEET",
+    totalStudents: 1800,
+    rating: 4.8,
+    createdAt: "2024-01-15T00:00:00Z",
+    activeBatchCount: 1,
+    nextBatchDate: "2026-05-15",
+    curriculum: [
+      { id: "s4", subject: "Biology", chapters: ["Human Physiology", "Genetics", "Ecology"], lectures: 20 },
+      { id: "s5", subject: "Chemistry", chapters: ["Organic Basics", "Biomolecules", "Equilibrium"], lectures: 12 },
+      { id: "s6", subject: "Physics", chapters: ["Current Electricity", "Optics", "Modern Physics"], lectures: 10 }
+    ]
+  },
+  {
+    id: "boards-excellence",
+    title: "Boards Excellence Program",
+    description:
+      "Board-focused coaching with chapter mastery, answer-writing practice, and monthly parent progress reports for Class 12.",
+    teacherId: "ananya-iyer",
+    teacherName: "Ananya Iyer",
+    teacherAvatarUrl:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
+    price: 14999,
+    lectureCount: 36,
+    thumbnail:
+      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80",
+    category: "Class 12 Boards",
+    totalStudents: 3100,
+    rating: 4.8,
+    createdAt: "2024-02-01T00:00:00Z",
+    activeBatchCount: 3,
+    nextBatchDate: "2026-04-28",
+    curriculum: [
+      { id: "s7", subject: "Mathematics", chapters: ["Algebra", "Probability", "Calculus"], lectures: 12 },
+      { id: "s8", subject: "Science", chapters: ["Electricity", "Acids & Bases", "Life Processes"], lectures: 12 },
+      { id: "s9", subject: "Exam Writing", chapters: ["Answer Framing", "Time Management", "Revision"], lectures: 12 }
+    ]
+  }
+];
