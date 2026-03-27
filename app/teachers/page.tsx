@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { PageContainer } from "@/components/layout/page-container";
 import { TeacherCard } from "@/components/teacher-card/teacher-card";
 import { buildMetadata, siteConfig } from "@/lib/seo";
-import { getTeachers } from "@/lib/teachers";
+import { getTeachers, STATIC_TEACHERS } from "@/lib/teachers";
 
 export const metadata: Metadata = buildMetadata({
   title: "Meet Our Teachers — Class 8 to 12 School Coaching Faculty",
@@ -20,7 +20,8 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function TeachersPage() {
-  const teachers = await getTeachers();
+  const fetched = await getTeachers().catch(() => []);
+  const teachers = fetched.length ? fetched : STATIC_TEACHERS;
 
   const teachersJsonLd = {
     "@context": "https://schema.org",
@@ -53,13 +54,9 @@ export default async function TeachersPage() {
         </h1>
       </div>
       <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-        {teachers.length ? (
-          teachers.map((teacher) => <TeacherCard key={teacher.id} teacher={teacher} />)
-        ) : (
-          <div className="rounded-4xl border border-ink/10 bg-white p-8 text-slate shadow-glow md:col-span-2 xl:col-span-3">
-            Teacher profiles will appear here when published courses are linked to faculty records in Supabase.
-          </div>
-        )}
+        {teachers.map((teacher) => (
+          <TeacherCard key={teacher.id} teacher={teacher} />
+        ))}
       </div>
     </PageContainer>
   );

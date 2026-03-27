@@ -5,30 +5,34 @@ import { getCourses, STATIC_COURSES } from "@/lib/courses";
 import { getCoursePath } from "@/lib/course-paths";
 import { siteConfig } from "@/lib/seo";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [coursesResult, posts] = await Promise.all([
-    getCourses().catch(() => STATIC_COURSES),
-    Promise.resolve(getBlogPosts())
-  ]);
-  const courses = coursesResult.length ? coursesResult : STATIC_COURSES;
+const STATIC_ROUTES = [
+  "",
+  "/home",
+  "/courses",
+  "/teachers",
+  "/blog",
+  "/about",
+  "/contact",
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/privacy-policy",
+  "/terms"
+];
 
-  const staticRoutes = [
-    "",
-    "/home",
-    "/courses",
-    "/teachers",
-    "/blog",
-    "/about",
-    "/contact",
-    "/login",
-    "/signup",
-    "/forgot-password",
-    "/privacy-policy",
-    "/terms"
-  ];
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let courses = STATIC_COURSES;
+  let posts = getBlogPosts();
+
+  try {
+    const fetched = await getCourses();
+    if (fetched.length) courses = fetched;
+  } catch {
+    // Supabase unavailable at build time — use static fallback
+  }
 
   return [
-    ...staticRoutes.map((path) => ({
+    ...STATIC_ROUTES.map((path) => ({
       url: `${siteConfig.url}${path || "/"}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,

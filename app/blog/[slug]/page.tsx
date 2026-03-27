@@ -124,7 +124,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
           <div className="rounded-4xl bg-ink p-8 text-cream shadow-glow">
             <h2 className="font-heading text-2xl font-bold">Turn reading into results</h2>
             <p className="mt-4 text-base leading-8 text-cream/80">
-              Explore guided courses and live classes designed for JEE, NEET, and board exam preparation.
+              Explore guided courses and live classes designed for Class 8 to 12 CBSE and state board preparation.
             </p>
             <div className="mt-8 flex flex-col gap-3">
               <Link

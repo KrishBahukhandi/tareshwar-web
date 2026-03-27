@@ -43,29 +43,29 @@ export type Teacher = {
 
 export const courses: Course[] = [
   {
-    id: "jee-mastery",
-    title: "JEE Mastery Program",
+    id: "class-11-12-pcm",
+    title: "Class 11 & 12 PCM Mastery",
     teacherName: "Rohan Verma",
     teacherPhoto:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
     teacherExperience: "9 years",
     teacherBio:
-      "Rohan specializes in building deep conceptual understanding in physics and helping JEE students improve speed without losing accuracy.",
+      "Rohan specializes in building deep conceptual understanding in Physics and Mathematics, helping Class 11 and 12 students master board-level problems with speed and accuracy.",
     lectureCount: 48,
     thumbnail:
       "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80",
-    category: "Competitive Exams",
-    description: "A rigorous PCM track with concept-first live classes, weekly tests, and mistake analysis.",
+    category: "Class 11-12",
+    description: "A rigorous PCM track with concept-first live classes, weekly tests, and mistake analysis for board exam success.",
     duration: "12 months",
     format: "Live + Recorded",
     learners: "2,400+",
     price: "24,999",
     progress: "89% satisfaction",
-    outcome: "Students targeting top engineering entrances with structured daily practice.",
+    outcome: "Students who want strong board marks and a clear conceptual foundation in Physics, Chemistry, and Maths.",
     nextClass: "Next class: Wednesday, 6:00 PM",
     highlights: [
       "Daily practice problems with faculty walkthroughs",
-      "Weekly analytics and rank trend tracking",
+      "Weekly analytics and chapter-wise progress tracking",
       "Dedicated mentor support for revision planning"
     ],
     curriculum: [
@@ -88,73 +88,73 @@ export const courses: Course[] = [
     reviews: [
       {
         name: "Aarav Mehta",
-        role: "JEE Aspirant",
+        role: "Class 12 Student",
         rating: 5,
         quote: "The pace was intense but clear. The weekly analytics helped me spot exactly where I was losing marks."
       },
       {
         name: "Nisha Kulkarni",
-        role: "Class 12 Student",
+        role: "Class 11 Student",
         rating: 5,
         quote: "Physics stopped feeling scary because every concept was broken down into manageable steps."
       }
     ]
   },
   {
-    id: "neet-momentum",
-    title: "NEET Momentum Batch",
+    id: "class-9-10-science",
+    title: "Class 9 & 10 Science Batch",
     teacherName: "Dr. Kavya Sharma",
     teacherPhoto:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
     teacherExperience: "11 years",
     teacherBio:
-      "Dr. Kavya brings a high-retention teaching style for biology and mentors repeaters on recall, revision, and exam confidence.",
+      "Dr. Kavya uses a high-retention teaching style for Science, helping Class 9 and 10 students build strong conceptual clarity and score consistently in board exams.",
     lectureCount: 42,
     thumbnail:
       "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1200&q=80",
-    category: "Medical Entrance",
-    description: "High-impact biology, chemistry, and physics preparation for consistent NEET performance.",
+    category: "Class 9-10",
+    description: "Chapter-wise Science coaching with live classes, doubt sessions, and mock tests designed for CBSE board results.",
     duration: "10 months",
     format: "Live Intensive",
     learners: "1,800+",
-    price: "22,499",
+    price: "12,499",
     progress: "4.8 course rating",
-    outcome: "A focused pathway for students aiming to improve speed, recall, and exam accuracy.",
+    outcome: "A focused pathway for students aiming to improve recall, exam accuracy, and board scores in Science.",
     nextClass: "Next class: Thursday, 5:30 PM",
     highlights: [
-      "Fast-recall revision decks for biology",
-      "Timed problem-solving workshops every weekend",
+      "Chapter-wise revision notes and quick recall sheets",
+      "Timed mock tests every weekend with detailed review",
       "Doubt support with quick turnaround"
     ],
     curriculum: [
       {
         subject: "Biology",
-        chapters: ["Human Physiology", "Genetics", "Ecology"],
+        chapters: ["Life Processes", "Control and Coordination", "Reproduction"],
         lectures: 20
       },
       {
         subject: "Chemistry",
-        chapters: ["Organic Basics", "Biomolecules", "Equilibrium"],
+        chapters: ["Chemical Reactions", "Acids, Bases and Salts", "Metals and Non-metals"],
         lectures: 12
       },
       {
         subject: "Physics",
-        chapters: ["Current Electricity", "Optics", "Modern Physics"],
+        chapters: ["Electricity", "Magnetic Effects", "Light — Reflection and Refraction"],
         lectures: 10
       }
     ],
     reviews: [
       {
         name: "Rahul Singh",
-        role: "NEET Aspirant",
+        role: "Class 10 Student",
         rating: 5,
-        quote: "The revision decks and doubt support gave me structure when I was struggling with consistency."
+        quote: "The revision notes and doubt support gave me structure when I was struggling with consistency before boards."
       },
       {
         name: "Pooja Deshmukh",
-        role: "Repeat Student",
+        role: "Parent",
         rating: 4,
-        quote: "Very strong biology teaching and mock review sessions that actually improved my test-taking confidence."
+        quote: "Very strong Science teaching and mock review sessions that genuinely improved my child's board confidence."
       }
     ]
   },
@@ -228,7 +228,7 @@ export const teachers: Teacher[] = [
     bio: "Known for turning dense chapters into memorable systems and helping students revise with confidence.",
     experience: "11 years",
     students: "6,500+",
-    highlight: "NEET repeaters specialist"
+    highlight: "Class 9–10 Science specialist"
   },
   {
     name: "Rohan Verma",
@@ -239,7 +239,7 @@ export const teachers: Teacher[] = [
     bio: "Builds strong fundamentals through intuitive examples, visual explanations, and high-frequency practice.",
     experience: "9 years",
     students: "5,200+",
-    highlight: "JEE advanced problem solving"
+    highlight: "Class 11–12 Physics & Maths"
   },
   {
     name: "Ananya Iyer",

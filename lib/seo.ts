@@ -4,7 +4,7 @@ export const siteConfig = {
   name: "Tareshwar Tutorials",
   url: "https://tareshwartutorials.com",
   description:
-    "Tareshwar Tutorials is an online coaching platform for exam preparation, offering courses, live classes, and study resources for JEE, NEET, and board exams."
+    "Tareshwar Tutorials is an online coaching platform for Class 8 to 12 school students, offering live classes, recorded courses, and doubt support for CBSE and state board exams."
 };
 
 type BuildMetadataInput = {
