@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { LoginForm } from "@/components/auth/LoginForm";
 import { PageContainer } from "@/components/layout/page-container";
@@ -15,7 +16,9 @@ export const metadata: Metadata = buildMetadata({
 export default function LoginPage() {
   return (
     <PageContainer as="section" className="max-w-md py-20">
-      <LoginForm />
+      <Suspense>
+        <LoginForm />
+      </Suspense>
     </PageContainer>
   );
 }

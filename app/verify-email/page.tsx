@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { VerifyEmailCard } from "@/components/auth/VerifyEmailCard";
 import { PageContainer } from "@/components/layout/page-container";
@@ -14,7 +15,9 @@ export const metadata: Metadata = buildMetadata({
 export default function VerifyEmailPage() {
   return (
     <PageContainer as="section" className="max-w-md py-20">
-      <VerifyEmailCard />
+      <Suspense>
+        <VerifyEmailCard />
+      </Suspense>
     </PageContainer>
   );
 }
