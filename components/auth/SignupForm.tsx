@@ -13,13 +13,11 @@ export function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    setSuccess("");
     setIsSubmitting(true);
 
     const result = await signUpStudent({ name, email, password });
@@ -40,7 +38,7 @@ export function SignupForm() {
           needsEmailVerification: true
         }
       });
-      setSuccess("Account created. Please verify your email before logging in.");
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
       return;
     }
 
@@ -102,12 +100,6 @@ export function SignupForm() {
         {error ? (
           <div className="rounded-2xl border border-coral/20 bg-coral/10 px-4 py-3 text-sm text-coral">
             {error}
-          </div>
-        ) : null}
-
-        {success ? (
-          <div className="rounded-2xl border border-teal/20 bg-teal/10 px-4 py-3 text-sm text-teal">
-            {success}
           </div>
         ) : null}
 

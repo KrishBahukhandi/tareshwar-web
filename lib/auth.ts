@@ -34,6 +34,7 @@ export async function signUpStudent(input: {
     email: input.email,
     password: input.password,
     options: {
+      emailRedirectTo: `${window.location.origin}/auth/callback`,
       data: {
         name: input.name,
         role: "student"
@@ -118,6 +119,24 @@ export async function signInStudent(input: { email: string; password: string }) 
   });
 
   return { user: data.user };
+}
+
+export async function resendVerificationEmail(email: string) {
+  const supabase = createSupabaseBrowserClient();
+
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth/callback`
+    }
+  });
+
+  if (error) {
+    return { error: mapSupabaseAuthError(error.message) };
+  }
+
+  return { success: true };
 }
 
 export async function requestPasswordReset(email: string) {
