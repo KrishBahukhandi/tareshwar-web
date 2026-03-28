@@ -121,6 +121,11 @@ export async function signInStudent(input: { email: string; password: string }) 
   return { user: data.user };
 }
 
+export async function signOutStudent() {
+  const supabase = createSupabaseBrowserClient();
+  await supabase.auth.signOut();
+}
+
 export async function resendVerificationEmail(email: string) {
   const supabase = createSupabaseBrowserClient();
 

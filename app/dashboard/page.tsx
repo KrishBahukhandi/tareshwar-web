@@ -62,6 +62,7 @@ export default async function DashboardPage() {
   return (
     <DashboardLayout
       studentName={student.name}
+      studentEmail={student.email}
       title={`Welcome back, ${student.name}`}
       description="Keep up with your enrolled courses, resume unfinished lessons, and stay ready for upcoming live classes."
     >

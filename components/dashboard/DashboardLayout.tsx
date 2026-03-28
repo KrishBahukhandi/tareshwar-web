@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/dashboard/Sidebar";
 
 type DashboardLayoutProps = {
   studentName: string;
+  studentEmail?: string;
   title: string;
   description: string;
   children: ReactNode;
@@ -12,6 +13,7 @@ type DashboardLayoutProps = {
 
 export function DashboardLayout({
   studentName,
+  studentEmail,
   title,
   description,
   children
@@ -19,7 +21,7 @@ export function DashboardLayout({
   return (
     <PageContainer as="section" className="py-16 lg:py-20">
       <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
-        <Sidebar studentName={studentName} />
+        <Sidebar studentName={studentName} studentEmail={studentEmail} />
 
         <div>
           <div className="rounded-4xl bg-ink px-8 py-10 text-cream shadow-glow">

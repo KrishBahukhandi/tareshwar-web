@@ -36,6 +36,7 @@ export default async function DashboardLiveClassesPage() {
   return (
     <DashboardLayout
       studentName={student.name}
+      studentEmail={student.email}
       title="Upcoming Live Classes"
       description="See every scheduled live session for your enrolled batches and join directly from the dashboard."
     >

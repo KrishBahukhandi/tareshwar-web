@@ -26,6 +26,7 @@ export default async function DashboardCoursesPage() {
   return (
     <DashboardLayout
       studentName={student.name}
+      studentEmail={student.email}
       title="My Courses"
       description="Browse every enrolled course, check your current progress, and jump back into the learning flow."
     >
@@ -52,8 +53,22 @@ export default async function DashboardCoursesPage() {
             );
           })
         ) : (
-          <div className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
-            <p className="text-base text-slate">You have not enrolled in any courses yet.</p>
+          <div className="col-span-2 flex flex-col items-center gap-4 rounded-4xl border border-ink/10 bg-white px-8 py-16 text-center shadow-glow">
+            <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-coral/10">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-coral" aria-hidden="true">
+                <path d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+              </svg>
+            </span>
+            <div>
+              <p className="font-heading text-lg font-semibold text-ink">No courses yet</p>
+              <p className="mt-1 text-sm text-slate">You haven&apos;t been enrolled in any courses. Contact your teacher or browse available courses.</p>
+            </div>
+            <a
+              href="/courses"
+              className="mt-2 inline-flex rounded-full bg-coral px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-coral/90"
+            >
+              Browse Courses
+            </a>
           </div>
         )}
       </div>
