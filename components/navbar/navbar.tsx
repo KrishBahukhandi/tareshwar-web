@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageContainer } from "@/components/layout/page-container";
 import { getCurrentStudent } from "@/lib/auth-server";
 
+import { MobileNav } from "./MobileNav";
 import { UserMenu } from "./UserMenu";
 
 const navLinks = [
@@ -46,8 +47,9 @@ export async function Navbar() {
             ))}
           </nav>
 
-          {/* Auth CTAs */}
+          {/* Right side: desktop CTAs + mobile hamburger */}
           <div className="flex items-center gap-3">
+            {/* Desktop auth */}
             {student ? (
               <UserMenu name={student.name} email={student.email} />
             ) : (
@@ -60,12 +62,15 @@ export async function Navbar() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="inline-flex rounded-full bg-coral px-4 py-2 text-sm font-semibold text-white transition hover:bg-coral/90"
+                  className="hidden rounded-full bg-coral px-4 py-2 text-sm font-semibold text-white transition hover:bg-coral/90 lg:inline-flex"
                 >
                   Enroll Free →
                 </Link>
               </>
             )}
+
+            {/* Mobile hamburger (always rendered, manages its own state) */}
+            <MobileNav student={student} />
           </div>
         </div>
       </PageContainer>

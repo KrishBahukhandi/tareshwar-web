@@ -148,12 +148,35 @@ export async function requestPasswordReset(email: string) {
   const supabase = createSupabaseBrowserClient();
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/login`
+    redirectTo: `${window.location.origin}/auth/reset-password`
   });
 
   if (error) {
     return { error: mapSupabaseAuthError(error.message) };
   }
 
+  return { success: true };
+}
+
+export async function updateStudentProfile(input: { name: string }) {
+  const supabase = createSupabaseBrowserClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated." };
+
+  const { error } = await supabase
+    .from("users")
+    .update({ name: input.name })
+    .eq("id", user.id);
+
+  if (error) return { error: "Failed to update profile. Please try again." };
+  return { success: true };
+}
+
+export async function updateStudentPassword(newPassword: string) {
+  const supabase = createSupabaseBrowserClient();
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) return { error: mapSupabaseAuthError(error.message) };
   return { success: true };
 }
