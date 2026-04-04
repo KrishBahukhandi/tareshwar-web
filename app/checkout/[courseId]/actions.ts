@@ -7,7 +7,6 @@ import { trackServerAnalyticsEvent } from "@/lib/analytics-server";
 import { getCourseById } from "@/lib/courses";
 import { createRazorpayOrder, getRazorpayPublicConfig, verifyRazorpayPaymentSignature } from "@/lib/payment";
 import { createSupabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { createSupabaseServerClient } from "@/lib/supabaseServerClient";
 
 type PaymentNotes = {
   course_id: string;
@@ -61,13 +60,25 @@ function parsePaymentNotes(notes: string | null): PaymentNotes | null {
   }
 }
 
+function requireSupabaseAdminClient() {
+  const adminClient = createSupabaseAdminClient();
+
+  if (!adminClient) {
+    throw new Error(
+      "Missing SUPABASE_SERVICE_ROLE_KEY on the web deployment. Add it in Vercel project environment variables."
+    );
+  }
+
+  return adminClient;
+}
+
 export async function proceedToPayment(courseId: string) {
   redirect(`/checkout/${courseId}`);
 }
 
 export async function createCheckoutOrder(input: { courseId: string }) {
   const student = await requireStudent();
-  const supabase = createSupabaseAdminClient() ?? (await createSupabaseServerClient());
+  const adminSupabase = requireSupabaseAdminClient();
   const course = await getCourseById(input.courseId);
 
   if (!course) {
@@ -80,13 +91,13 @@ export async function createCheckoutOrder(input: { courseId: string }) {
 
   if (course.price <= 0) {
     await ensureEnrollmentForCourse({
-      supabase,
+      supabase: adminSupabase,
       studentId: student.id,
       courseId: course.id
     });
 
     const freeTransactionId = `free_${course.id}_${student.id}`;
-    const { data: existingPayment } = await supabase
+    const { data: existingPayment } = await adminSupabase
       .from("payments")
       .select("id")
       .eq("student_id", student.id)
@@ -95,19 +106,25 @@ export async function createCheckoutOrder(input: { courseId: string }) {
       .maybeSingle();
 
     if (!existingPayment) {
-      await supabase.from("payments").insert({
-        student_id: student.id,
-        course_id: course.id,
-        amount: 0,
-        payment_status: "completed",
-        payment_method: "free",
-        transaction_id: freeTransactionId,
-        notes: JSON.stringify({
+      const { error: freePaymentError } = await adminSupabase
+        .from("payments")
+        .insert({
+          student_id: student.id,
           course_id: course.id,
-          course_title: course.title,
-          razorpay_order_id: "free_course"
-        } satisfies PaymentNotes)
-      });
+          amount: 0,
+          payment_status: "completed",
+          payment_method: "free",
+          transaction_id: freeTransactionId,
+          notes: JSON.stringify({
+            course_id: course.id,
+            course_title: course.title,
+            razorpay_order_id: "free_course"
+          } satisfies PaymentNotes)
+        });
+
+      if (freePaymentError) {
+        // Enrollment is the primary action for free courses; payment logging is best-effort.
+      }
     }
 
     await trackServerAnalyticsEvent({
@@ -140,7 +157,7 @@ export async function createCheckoutOrder(input: { courseId: string }) {
     razorpay_order_id: order.id
   };
 
-  const { error: paymentError } = await supabase.from("payments").insert({
+  const { error: paymentError } = await adminSupabase.from("payments").insert({
     student_id: student.id,
     course_id: course.id,
     amount: course.price,
@@ -176,7 +193,7 @@ export async function verifyCheckoutPayment(input: {
   signature: string;
 }) {
   const student = await requireStudent();
-  const supabase = createSupabaseAdminClient() ?? (await createSupabaseServerClient());
+  const adminSupabase = requireSupabaseAdminClient();
 
   const isValid = verifyRazorpayPaymentSignature({
     orderId: input.orderId,
@@ -188,7 +205,7 @@ export async function verifyCheckoutPayment(input: {
     throw new Error("Invalid Razorpay payment signature.");
   }
 
-  const { data: paymentRow, error: paymentLookupError } = await supabase
+  const { data: paymentRow, error: paymentLookupError } = await adminSupabase
     .from("payments")
     .select("id, course_id, payment_status, transaction_id, notes")
     .eq("student_id", student.id)
@@ -206,7 +223,7 @@ export async function verifyCheckoutPayment(input: {
   }
 
   await ensureEnrollmentForCourse({
-    supabase,
+    supabase: adminSupabase,
     studentId: student.id,
     courseId: paymentNotes.course_id
   });
@@ -216,7 +233,7 @@ export async function verifyCheckoutPayment(input: {
     razorpay_payment_id: input.paymentId
   };
 
-  const { error: paymentUpdateError } = await supabase
+  const { error: paymentUpdateError } = await adminSupabase
     .from("payments")
     .update({
       payment_status: "completed",
@@ -251,8 +268,13 @@ export async function markCheckoutFailed(input: { orderId?: string; reason?: str
     return { success: true };
   }
 
-  const supabase = createSupabaseAdminClient() ?? (await createSupabaseServerClient());
-  const { data: paymentRow } = await supabase
+  const adminSupabase = createSupabaseAdminClient();
+
+  if (!adminSupabase) {
+    return { success: true };
+  }
+
+  const { data: paymentRow } = await adminSupabase
     .from("payments")
     .select("id, notes, payment_status")
     .eq("student_id", student.id)
@@ -272,7 +294,7 @@ export async function markCheckoutFailed(input: { orderId?: string; reason?: str
     failure_reason: input.reason ?? "payment_failed"
   };
 
-  await supabase
+  await adminSupabase
     .from("payments")
     .update({
       payment_status: "failed",
