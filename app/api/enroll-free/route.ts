@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
 import { createSupabaseAdminClient } from "@/lib/supabaseAdminClient";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,14 +17,7 @@ export function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = createSupabaseAdminClient();
-
-  if (!supabase) {
-    return NextResponse.json(
-      { error: "Server configuration error" },
-      { status: 500, headers: corsHeaders }
-    );
-  }
+  const adminSupabase = createSupabaseAdminClient();
 
   // Authenticate via Supabase token
   const authHeader = request.headers.get("authorization");
@@ -33,10 +30,33 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const authClient =
+    adminSupabase ??
+    (supabaseUrl && supabaseAnonKey
+      ? createClient(supabaseUrl, supabaseAnonKey, {
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+          },
+        })
+      : null);
+
+  if (!authClient) {
+    return NextResponse.json(
+      { error: "Server configuration error: missing Supabase credentials" },
+      { status: 500, headers: corsHeaders }
+    );
+  }
+
   const {
     data: { user },
     error: authError,
-  } = await supabase.auth.getUser(token);
+  } = await authClient.auth.getUser(token);
 
   if (authError || !user) {
     return NextResponse.json(
@@ -65,7 +85,9 @@ export async function POST(request: NextRequest) {
   }
 
   // Check course is free and published
-  const { data: course, error: courseError } = await supabase
+  const dbClient = adminSupabase ?? authClient;
+
+  const { data: course, error: courseError } = await dbClient
     .from("courses")
     .select("id, price, is_published")
     .eq("id", courseId)
@@ -93,7 +115,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Check if already enrolled
-  const { data: existing } = await supabase
+  const { data: existing } = await dbClient
     .from("enrollments")
     .select("id, student_id, course_id, enrolled_at, progress_percent")
     .eq("student_id", user.id)
@@ -105,7 +127,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Enroll the student
-  const { data: enrollment, error: enrollError } = await supabase
+  const { data: enrollment, error: enrollError } = await dbClient
     .from("enrollments")
     .insert({ student_id: user.id, course_id: courseId })
     .select("id, student_id, course_id, enrolled_at, progress_percent")

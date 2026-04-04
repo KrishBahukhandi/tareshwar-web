@@ -4,6 +4,8 @@ import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
+
 import { createCheckoutOrder, markCheckoutFailed, verifyCheckoutPayment } from "./actions";
 
 declare global {
@@ -17,6 +19,7 @@ declare global {
 
 type PaymentButtonProps = {
   courseId: string;
+  isFree: boolean;
   course: {
     teacher: string;
     startDate: string | null;
@@ -36,7 +39,7 @@ function formatCourseDate(date: string | null) {
   }).format(new Date(date));
 }
 
-export function PaymentButton({ courseId, course }: PaymentButtonProps) {
+export function PaymentButton({ courseId, isFree, course }: PaymentButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -46,6 +49,36 @@ export function PaymentButton({ courseId, course }: PaymentButtonProps) {
     setIsLoading(true);
 
     try {
+      if (isFree) {
+        const supabase = createSupabaseBrowserClient();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session?.access_token) {
+          throw new Error("Please log in again before enrolling.");
+        }
+
+        const response = await fetch("/api/enroll-free", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ courseId }),
+        });
+
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+
+        if (!response.ok) {
+          throw new Error(payload?.error || "Unable to enroll in this free course.");
+        }
+
+        router.push(`/payment-success?course=${encodeURIComponent(courseId)}`);
+        router.refresh();
+        return;
+      }
+
       const order = await createCheckoutOrder({ courseId });
 
       if (order.mode === "free") {
@@ -153,7 +186,7 @@ export function PaymentButton({ courseId, course }: PaymentButtonProps) {
         disabled={isLoading}
         className="inline-flex w-full justify-center rounded-full bg-coral px-6 py-3 font-semibold text-white transition hover:bg-coral/90 disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {isLoading ? "Processing..." : "Enroll Now"}
+        {isLoading ? "Processing..." : isFree ? "Enroll Free" : "Enroll Now"}
       </button>
     </>
   );

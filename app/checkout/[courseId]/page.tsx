@@ -170,6 +170,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
             {course.isActive ? (
               <PaymentButton
                 courseId={course.id}
+                isFree={course.price <= 0}
                 course={{
                   teacher: course.teacherName,
                   startDate: course.startDate,
