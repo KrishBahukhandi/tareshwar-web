@@ -30,7 +30,7 @@ export function TeacherCard({ teacher }: TeacherCardProps) {
         <h3 className="font-heading text-2xl font-bold text-ink">{teacher.name}</h3>
         <p className="mt-2 text-sm font-semibold uppercase tracking-[0.18em] text-teal">{teacher.primaryCategory}</p>
         <p className="mt-4 text-base leading-7 text-slate">
-          Faculty profile sourced from published courses on the platform. Student enrollment and course delivery remain batch-based.
+          Faculty profile sourced from published courses on the platform. Student enrollment and delivery now run directly through each course record.
         </p>
         <div className="mt-6 grid gap-3 text-sm text-slate">
           <div className="flex items-center gap-3">

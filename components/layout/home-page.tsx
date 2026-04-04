@@ -33,12 +33,12 @@ const HOW_IT_WORKS = [
   {
     step: "01",
     title: "Choose your class and subject",
-    desc: "Browse batches for your child's class — from Class 8 Foundation to Class 12 Boards. Check the curriculum, teacher profile, and batch schedule."
+    desc: "Browse courses for your child's class — from Class 8 Foundation to Class 12 Boards. Check the curriculum, teacher profile, and course schedule."
   },
   {
     step: "02",
-    title: "Enroll and join your batch",
-    desc: "Pay once and get instant access — live batch, recorded sessions, student dashboard, and the Flutter app, all activated immediately."
+    title: "Enroll and join your course",
+    desc: "Pay once and get instant access to your course, recorded sessions, student dashboard, and the Flutter app, all activated immediately."
   },
   {
     step: "03",
@@ -210,7 +210,7 @@ export function HomePage({ courses, teachers }: HomePageProps) {
               Featured Courses
             </span>
             <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight text-ink">
-              Structured batches for Class 8 to 12 — every subject, every stage.
+              Structured courses for Class 8 to 12 — every subject, every stage.
             </h2>
           </div>
           <Link href="/courses" className="font-semibold text-teal hover:text-teal/80">
@@ -392,7 +392,7 @@ export function HomePage({ courses, teachers }: HomePageProps) {
             Your child&apos;s board result is closer than you think.
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">
-            Join 12,000+ school students who chose structured coaching over scattered self-study. The next batch is filling up — enroll today and lock your spot.
+            Join 12,000+ school students who chose structured coaching over scattered self-study. Current course seats are filling up, so enroll today and lock your spot.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link

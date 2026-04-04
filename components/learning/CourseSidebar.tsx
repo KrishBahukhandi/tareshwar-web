@@ -14,7 +14,7 @@ export function CourseSidebar({ course, currentLectureId }: CourseSidebarProps) 
       <div className="rounded-3xl bg-cream p-5">
         <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal">Learning Progress</p>
         <h2 className="mt-3 font-heading text-2xl font-bold text-ink">{course.title}</h2>
-        <p className="mt-2 text-sm text-slate">{course.batchName}</p>
+        <p className="mt-2 text-sm text-slate">{course.classLevel ?? "Course access active"}</p>
         <div className="mt-5 h-2 overflow-hidden rounded-full bg-white">
           <div
             className="h-full rounded-full bg-coral"

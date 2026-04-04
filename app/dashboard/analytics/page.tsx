@@ -47,7 +47,7 @@ export default async function AnalyticsPage() {
       .eq("student_id", student.id),
     supabase
       .from("enrollments")
-      .select("id, progress_percent, enrolled_at, batch:batches(batch_name, course:courses(id, title, total_lectures))")
+      .select("id, progress_percent, enrolled_at, course:courses(id, title, total_lectures, class_level)")
       .eq("student_id", student.id)
       .order("enrolled_at", { ascending: false }),
   ]);
@@ -134,8 +134,7 @@ export default async function AnalyticsPage() {
           {(enrollments ?? []).length ? (
             <div className="mt-6 space-y-5">
               {enrollments!.map((entry) => {
-                const batch = firstRelation(entry.batch);
-                const course = firstRelation(batch?.course);
+                const course = firstRelation(entry.course);
                 const pct = Math.min(100, Math.max(0, Number(entry.progress_percent ?? 0)));
 
                 return (
@@ -143,7 +142,7 @@ export default async function AnalyticsPage() {
                     <div className="flex items-center justify-between gap-4">
                       <div className="min-w-0">
                         <p className="truncate font-semibold text-ink">{course?.title ?? "Course"}</p>
-                        <p className="text-xs text-slate">{batch?.batch_name ?? "Batch"}</p>
+                        <p className="text-xs text-slate">{course?.class_level ?? "Course access active"}</p>
                       </div>
                       <span className="shrink-0 font-heading text-lg font-bold text-ink">{pct}%</span>
                     </div>

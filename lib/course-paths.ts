@@ -7,9 +7,15 @@ export function slugifyCourseTitle(title: string) {
 }
 
 export function getCoursePath(course: { id: string; title: string }) {
-  return `/course/${course.id}--${slugifyCourseTitle(course.title)}`;
+  return `/course/${encodeURIComponent(course.id)}--${slugifyCourseTitle(course.title)}`;
 }
 
 export function getCourseIdFromSlug(slug: string) {
-  return slug.split("--")[0] ?? slug;
+  const rawId = slug.split("--")[0] ?? slug;
+
+  try {
+    return decodeURIComponent(rawId);
+  } catch {
+    return rawId;
+  }
 }

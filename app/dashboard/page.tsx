@@ -19,23 +19,26 @@ export default async function DashboardPage() {
 
   const { data: enrollments } = await supabase
     .from("enrollments")
-    .select(
-      "id, progress_percent, batch:batches(id, batch_name, course:courses(id, title, thumbnail_url))"
-    )
+    .select("id, progress_percent, course:courses(id, title, thumbnail_url)")
     .eq("student_id", student.id)
     .order("enrolled_at", { ascending: false })
     .limit(3);
 
-  const batchIds = (enrollments ?? [])
-    .map((entry) => firstRelation(entry.batch)?.id)
+  const courseIds = (enrollments ?? [])
+    .map((entry) => firstRelation(entry.course)?.id)
     .filter((value): value is string => Boolean(value));
 
-  const [{ data: liveClasses }, { data: progressRows }, { data: announcements }] = await Promise.all([
-    batchIds.length
+  const [
+    { data: liveClasses },
+    { data: progressRows },
+    { data: courseAnnouncements },
+    { data: platformAnnouncements }
+  ] = await Promise.all([
+    courseIds.length
       ? supabase
           .from("live_classes")
-          .select("id, title, start_time, meeting_link, batch:batches(batch_name), teacher:users(name)")
-          .in("batch_id", batchIds)
+          .select("id, title, start_time, meeting_link, course:courses(title, class_level), teacher:users(name)")
+          .in("course_id", courseIds)
           .gte("start_time", new Date().toISOString())
           .order("start_time", { ascending: true })
           .limit(3)
@@ -49,15 +52,25 @@ export default async function DashboardPage() {
       .eq("completed", false)
       .order("updated_at", { ascending: false })
       .limit(3),
-    batchIds.length
+    courseIds.length
       ? supabase
           .from("announcements")
-          .select("id, title, body, created_at, batch:batches(batch_name)")
-          .in("batch_id", batchIds)
+          .select("id, title, body, created_at, course:courses(title, class_level)")
+          .in("course_id", courseIds)
           .order("created_at", { ascending: false })
           .limit(3)
-      : Promise.resolve({ data: [] })
+      : Promise.resolve({ data: [] }),
+    supabase
+      .from("announcements")
+      .select("id, title, body, created_at, course_id")
+      .is("course_id", null)
+      .order("created_at", { ascending: false })
+      .limit(3)
   ]);
+
+  const announcements = [...(courseAnnouncements ?? []), ...(platformAnnouncements ?? [])]
+    .sort((left, right) => new Date(right.created_at).getTime() - new Date(left.created_at).getTime())
+    .slice(0, 3);
 
   return (
     <DashboardLayout
@@ -112,7 +125,7 @@ export default async function DashboardPage() {
             <div className="mt-6 space-y-4">
             {(liveClasses ?? []).length ? (
               liveClasses?.map((liveClass) => {
-                const batch = firstRelation(liveClass.batch);
+                const course = firstRelation(liveClass.course);
                 const teacher = firstRelation(liveClass.teacher);
 
                 return (
@@ -122,7 +135,7 @@ export default async function DashboardPage() {
                     teacherName={teacher?.name ?? "Faculty"}
                     startTime={liveClass.start_time}
                     meetingLink={liveClass.meeting_link}
-                    batchName={batch?.batch_name ?? "Live batch"}
+                    courseLabel={course?.title ?? course?.class_level ?? "Live course"}
                   />
                 );
               })
@@ -138,16 +151,17 @@ export default async function DashboardPage() {
           <div className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
             <h2 className="font-heading text-2xl font-semibold text-ink">Recent Announcements</h2>
             <div className="mt-6 space-y-4">
-            {(announcements ?? []).length ? (
-              announcements?.map((announcement) => {
-                const batch = firstRelation(announcement.batch);
+            {announcements.length ? (
+              announcements.map((announcement) => {
+                const course = firstRelation("course" in announcement ? announcement.course : null);
+                const label = course?.title ?? course?.class_level ?? "Platform update";
 
                 return (
                   <article key={announcement.id} className="rounded-3xl border border-ink/10 p-5">
                     <p className="font-semibold text-ink">{announcement.title}</p>
                     <p className="mt-2 text-sm leading-6 text-slate">{announcement.body}</p>
                     <div className="mt-4 flex flex-wrap gap-3 text-xs uppercase tracking-[0.12em] text-teal">
-                      <span>{batch?.batch_name ?? "Announcement"}</span>
+                      <span>{label}</span>
                       <span>
                         {new Date(announcement.created_at).toLocaleDateString("en-IN", {
                           dateStyle: "medium"
@@ -158,7 +172,7 @@ export default async function DashboardPage() {
                 );
               })
             ) : (
-              <p className="text-sm text-slate">No recent announcements for your batches.</p>
+              <p className="text-sm text-slate">No recent announcements for your enrolled courses yet.</p>
             )}
             </div>
           </div>

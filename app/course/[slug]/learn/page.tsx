@@ -38,8 +38,8 @@ export default async function CourseLearnPage({ params }: CourseLearnPageProps) 
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <div className="rounded-3xl bg-white/10 px-5 py-4 backdrop-blur">
-                <p className="text-sm text-white/70">Batch</p>
-                <p className="mt-2 font-semibold text-white">{course.batchName}</p>
+                <p className="text-sm text-white/70">Class level</p>
+                <p className="mt-2 font-semibold text-white">{course.classLevel ?? "Course access active"}</p>
               </div>
               <div className="rounded-3xl bg-white/10 px-5 py-4 backdrop-blur">
                 <p className="text-sm text-white/70">Teacher</p>
@@ -77,7 +77,7 @@ export default async function CourseLearnPage({ params }: CourseLearnPageProps) 
             <section className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
               <h2 className="font-heading text-3xl font-bold text-ink">Curriculum not published yet</h2>
               <p className="mt-4 max-w-3xl text-base leading-8 text-slate">
-                Your enrollment is active, but the subject and lecture structure for this batch has
+                Your enrollment is active, but the subject and lecture structure for this course has
                 not been published in the platform yet. Please contact your institute admin or
                 teacher to finish the course setup.
               </p>

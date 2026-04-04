@@ -19,16 +19,16 @@ export default async function DashboardLiveClassesPage() {
 
   const { data: enrollments } = await supabase
     .from("enrollments")
-    .select("batch_id")
+    .select("course_id")
     .eq("student_id", student.id);
 
-  const batchIds = (enrollments ?? []).map((entry) => entry.batch_id);
+  const courseIds = (enrollments ?? []).map((entry) => entry.course_id);
 
-  const { data: liveClasses } = batchIds.length
+  const { data: liveClasses } = courseIds.length
     ? await supabase
         .from("live_classes")
-        .select("id, title, description, meeting_link, start_time, duration_minutes, batch:batches(batch_name), teacher:users(name)")
-        .in("batch_id", batchIds)
+        .select("id, title, description, meeting_link, start_time, duration_minutes, course:courses(title, class_level), teacher:users(name)")
+        .in("course_id", courseIds)
         .gte("start_time", new Date().toISOString())
         .order("start_time", { ascending: true })
     : { data: [] };
@@ -38,12 +38,12 @@ export default async function DashboardLiveClassesPage() {
       studentName={student.name}
       studentEmail={student.email}
       title="Upcoming Live Classes"
-      description="See every scheduled live session for your enrolled batches and join directly from the dashboard."
+      description="See every scheduled live session for your enrolled courses and join directly from the dashboard."
     >
       <div className="mt-12 grid gap-6">
         {(liveClasses ?? []).length ? (
           liveClasses?.map((liveClass) => {
-            const batch = firstRelation(liveClass.batch);
+            const course = firstRelation(liveClass.course);
             const teacher = firstRelation(liveClass.teacher);
 
             return (
@@ -53,7 +53,7 @@ export default async function DashboardLiveClassesPage() {
                   teacherName={teacher?.name ?? "Faculty"}
                   startTime={liveClass.start_time}
                   meetingLink={liveClass.meeting_link}
-                  batchName={batch?.batch_name ?? "Batch class"}
+                  courseLabel={course?.title ?? course?.class_level ?? "Live course"}
                 />
                 {liveClass.description ? (
                   <p className="px-3 text-sm text-slate">{liveClass.description}</p>
@@ -66,7 +66,7 @@ export default async function DashboardLiveClassesPage() {
           })
         ) : (
           <div className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
-            <p className="text-base text-slate">No live classes are scheduled for your batches right now.</p>
+            <p className="text-base text-slate">No live classes are scheduled for your courses right now.</p>
           </div>
         )}
       </div>

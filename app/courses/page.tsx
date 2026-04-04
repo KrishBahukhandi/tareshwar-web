@@ -53,7 +53,7 @@ export default async function CoursesPage() {
           Explore live and self-paced programs that move students from confusion to confidence.
         </h1>
         <p className="mt-5 text-lg leading-8 text-slate">
-          Compare published pricing, curriculum coverage, batch availability, and faculty assignment
+          Compare published pricing, curriculum coverage, course availability, and faculty assignment
           across board prep and entrance coaching tracks.
         </p>
       </div>

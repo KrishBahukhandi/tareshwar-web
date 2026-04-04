@@ -31,8 +31,15 @@ type CourseRow = {
   is_published: boolean;
   total_lectures: number;
   total_students: number;
+  enrolled_count: number;
   rating: number | null;
   created_at: string;
+  class_level: string | null;
+  max_students: number;
+  start_date: string | null;
+  end_date: string | null;
+  subjects_overview: string[] | null;
+  is_active: boolean;
   teacher?: {
     id: string;
     name: string | null;
@@ -65,8 +72,12 @@ export type Course = {
   totalStudents: number;
   rating: number | null;
   createdAt: string;
-  activeBatchCount: number;
-  nextBatchDate: string | null;
+  classLevel: string | null;
+  maxStudents: number;
+  startDate: string | null;
+  endDate: string | null;
+  subjectsOverview: string[];
+  isActive: boolean;
   curriculum: CourseCurriculum[];
 };
 
@@ -87,10 +98,6 @@ async function getWebsiteSupabase() {
 
 function normalizeCourse(
   row: CourseRow,
-  batchSummary?: {
-    activeBatchCount: number;
-    nextBatchDate: string | null;
-  },
   curriculum: CourseCurriculum[] = []
 ) {
   const teacher = firstRelation(row.teacher);
@@ -106,147 +113,124 @@ function normalizeCourse(
     lectureCount: Number(row.total_lectures ?? 0),
     thumbnail: row.thumbnail_url || COURSE_THUMBNAIL_FALLBACK,
     category: row.category_tag?.trim() || "General",
-    totalStudents: Number(row.total_students ?? 0),
+    totalStudents: Number(row.enrolled_count ?? row.total_students ?? 0),
     rating: row.rating == null ? null : Number(row.rating),
     createdAt: row.created_at,
-    activeBatchCount: batchSummary?.activeBatchCount ?? 0,
-    nextBatchDate: batchSummary?.nextBatchDate ?? null,
+    classLevel: row.class_level?.trim() || null,
+    maxStudents: Number(row.max_students ?? 0),
+    startDate: row.start_date,
+    endDate: row.end_date,
+    subjectsOverview: Array.isArray(row.subjects_overview) ? row.subjects_overview : [],
+    isActive: Boolean(row.is_active),
     curriculum
   } satisfies Course;
 }
 
-async function getBatchSummary(courseIds: string[]) {
-  if (!courseIds.length) {
-    return new Map<string, { activeBatchCount: number; nextBatchDate: string | null }>();
-  }
+async function getCourseCurriculum(courseId: string) {
+  try {
+    const supabase = await getWebsiteSupabase();
+    const { data: subjectRows } = await supabase
+      .from("subjects")
+      .select("id, name, sort_order")
+      .eq("course_id", courseId)
+      .order("sort_order", { ascending: true });
 
-  const supabase = await getWebsiteSupabase();
-  const { data } = await supabase
-    .from("batches")
-    .select("course_id, start_date, is_active")
-    .in("course_id", courseIds);
-
-  const summary = new Map<string, { activeBatchCount: number; nextBatchDate: string | null }>();
-
-  for (const row of data ?? []) {
-    const courseId = String(row.course_id);
-    const existing = summary.get(courseId) ?? {
-      activeBatchCount: 0,
-      nextBatchDate: null
-    };
-
-    if (row.is_active) {
-      existing.activeBatchCount += 1;
-      if (!existing.nextBatchDate || String(row.start_date) < existing.nextBatchDate) {
-        existing.nextBatchDate = String(row.start_date);
-      }
+    const subjects = (subjectRows ?? []) as CurriculumRow[];
+    if (!subjects.length) {
+      return [] as CourseCurriculum[];
     }
 
-    summary.set(courseId, existing);
-  }
+    const subjectIds = subjects.map((subject) => subject.id);
+    const { data: chapterRows } = await supabase
+      .from("chapters")
+      .select("id, subject_id, name, sort_order")
+      .in("subject_id", subjectIds)
+      .order("sort_order", { ascending: true });
 
-  return summary;
-}
+    const chapters = (chapterRows ?? []) as ChapterRow[];
+    const chapterIds = chapters.map((chapter) => chapter.id);
+    const { data: lectureRows } = chapterIds.length
+      ? await supabase.from("lectures").select("id, chapter_id").in("chapter_id", chapterIds)
+      : { data: [] as LectureRow[] };
 
-async function getCourseCurriculum(courseId: string) {
-  const supabase = await getWebsiteSupabase();
-  const { data: subjectRows } = await supabase
-    .from("subjects")
-    .select("id, name, sort_order")
-    .eq("course_id", courseId)
-    .order("sort_order", { ascending: true });
+    const lectureCountByChapter = new Map<string, number>();
+    for (const lecture of (lectureRows ?? []) as LectureRow[]) {
+      lectureCountByChapter.set(
+        lecture.chapter_id,
+        (lectureCountByChapter.get(lecture.chapter_id) ?? 0) + 1
+      );
+    }
 
-  const subjects = (subjectRows ?? []) as CurriculumRow[];
-  if (!subjects.length) {
+    const chaptersBySubject = new Map<string, ChapterRow[]>();
+    for (const chapter of chapters) {
+      const current = chaptersBySubject.get(chapter.subject_id) ?? [];
+      current.push(chapter);
+      chaptersBySubject.set(chapter.subject_id, current);
+    }
+
+    return subjects.map((subject) => {
+      const subjectChapters = (chaptersBySubject.get(subject.id) ?? []).sort(
+        (left, right) => left.sort_order - right.sort_order
+      );
+
+      return {
+        id: subject.id,
+        subject: subject.name,
+        chapters: subjectChapters.map((chapter) => chapter.name),
+        lectures: subjectChapters.reduce(
+          (count, chapter) => count + (lectureCountByChapter.get(chapter.id) ?? 0),
+          0
+        )
+      } satisfies CourseCurriculum;
+    });
+  } catch {
     return [] as CourseCurriculum[];
   }
-
-  const subjectIds = subjects.map((subject) => subject.id);
-  const { data: chapterRows } = await supabase
-    .from("chapters")
-    .select("id, subject_id, name, sort_order")
-    .in("subject_id", subjectIds)
-    .order("sort_order", { ascending: true });
-
-  const chapters = (chapterRows ?? []) as ChapterRow[];
-  const chapterIds = chapters.map((chapter) => chapter.id);
-  const { data: lectureRows } = chapterIds.length
-    ? await supabase.from("lectures").select("id, chapter_id").in("chapter_id", chapterIds)
-    : { data: [] as LectureRow[] };
-
-  const lectureCountByChapter = new Map<string, number>();
-  for (const lecture of (lectureRows ?? []) as LectureRow[]) {
-    lectureCountByChapter.set(
-      lecture.chapter_id,
-      (lectureCountByChapter.get(lecture.chapter_id) ?? 0) + 1
-    );
-  }
-
-  const chaptersBySubject = new Map<string, ChapterRow[]>();
-  for (const chapter of chapters) {
-    const current = chaptersBySubject.get(chapter.subject_id) ?? [];
-    current.push(chapter);
-    chaptersBySubject.set(chapter.subject_id, current);
-  }
-
-  return subjects.map((subject) => {
-    const subjectChapters = (chaptersBySubject.get(subject.id) ?? []).sort(
-      (left, right) => left.sort_order - right.sort_order
-    );
-
-    return {
-      id: subject.id,
-      subject: subject.name,
-      chapters: subjectChapters.map((chapter) => chapter.name),
-      lectures: subjectChapters.reduce(
-        (count, chapter) => count + (lectureCountByChapter.get(chapter.id) ?? 0),
-        0
-      )
-    } satisfies CourseCurriculum;
-  });
 }
 
 export async function getCourses() {
-  const supabase = await getWebsiteSupabase();
-  const { data, error } = await supabase
-    .from("courses")
-    .select(
-      "id, title, description, teacher_id, price, thumbnail_url, category_tag, is_published, total_lectures, total_students, rating, created_at, teacher:users!teacher_id(id, name, avatar_url)"
-    )
-    .eq("is_published", true)
-    .order("created_at", { ascending: false });
+  try {
+    const supabase = await getWebsiteSupabase();
+    const { data, error } = await supabase
+      .from("courses")
+      .select(
+        "id, title, description, teacher_id, price, thumbnail_url, category_tag, is_published, total_lectures, total_students, enrolled_count, rating, created_at, class_level, max_students, start_date, end_date, subjects_overview, is_active, teacher:users!teacher_id(id, name, avatar_url)"
+      )
+      .eq("is_published", true)
+      .order("created_at", { ascending: false });
 
-  if (error || !data) {
-    return [] as Course[];
+    if (error || !data) {
+      return STATIC_COURSES;
+    }
+
+    const rows = data as CourseRow[];
+    return rows.length ? rows.map((row) => normalizeCourse(row, [])) : STATIC_COURSES;
+  } catch {
+    return STATIC_COURSES;
   }
-
-  const rows = data as CourseRow[];
-  const batchSummary = await getBatchSummary(rows.map((course) => course.id));
-
-  return rows.map((row) => normalizeCourse(row, batchSummary.get(row.id), []));
 }
 
 export async function getCourseById(id: string) {
-  const supabase = await getWebsiteSupabase();
-  const { data, error } = await supabase
-    .from("courses")
-    .select(
-      "id, title, description, teacher_id, price, thumbnail_url, category_tag, is_published, total_lectures, total_students, rating, created_at, teacher:users!teacher_id(id, name, avatar_url)"
-    )
-    .eq("id", id)
-    .eq("is_published", true)
-    .maybeSingle();
+  try {
+    const supabase = await getWebsiteSupabase();
+    const { data, error } = await supabase
+      .from("courses")
+      .select(
+        "id, title, description, teacher_id, price, thumbnail_url, category_tag, is_published, total_lectures, total_students, enrolled_count, rating, created_at, class_level, max_students, start_date, end_date, subjects_overview, is_active, teacher:users!teacher_id(id, name, avatar_url)"
+      )
+      .eq("id", id)
+      .eq("is_published", true)
+      .maybeSingle();
 
-  if (error || !data) {
-    return null;
+    if (error || !data) {
+      return STATIC_COURSES.find((course) => course.id === id) ?? null;
+    }
+
+    const curriculum = await getCourseCurriculum(id);
+    return normalizeCourse(data as CourseRow, curriculum);
+  } catch {
+    return STATIC_COURSES.find((course) => course.id === id) ?? null;
   }
-
-  const [batchSummary, curriculum] = await Promise.all([
-    getBatchSummary([id]),
-    getCourseCurriculum(id)
-  ]);
-
-  return normalizeCourse(data as CourseRow, batchSummary.get(id), curriculum);
 }
 
 export { slugifyCourseTitle, getCoursePath, getCourseIdFromSlug };
@@ -270,8 +254,12 @@ export const STATIC_COURSES: Course[] = [
     totalStudents: 3200,
     rating: 4.9,
     createdAt: "2024-01-01T00:00:00Z",
-    activeBatchCount: 3,
-    nextBatchDate: "2026-05-01",
+    classLevel: "Class 9-10",
+    maxStudents: 60,
+    startDate: "2026-05-01",
+    endDate: null,
+    subjectsOverview: ["Physics", "Chemistry", "Biology"],
+    isActive: true,
     curriculum: [
       { id: "s1", subject: "Physics", chapters: ["Motion", "Force & Laws of Motion", "Light — Reflection & Refraction"], lectures: 20 },
       { id: "s2", subject: "Chemistry", chapters: ["Matter in Our Surroundings", "Atoms & Molecules", "Chemical Reactions"], lectures: 20 },
@@ -295,8 +283,12 @@ export const STATIC_COURSES: Course[] = [
     totalStudents: 2100,
     rating: 4.8,
     createdAt: "2024-01-15T00:00:00Z",
-    activeBatchCount: 2,
-    nextBatchDate: "2026-05-10",
+    classLevel: "Class 11-12",
+    maxStudents: 50,
+    startDate: "2026-05-10",
+    endDate: null,
+    subjectsOverview: ["Mathematics"],
+    isActive: true,
     curriculum: [
       { id: "s4", subject: "Algebra", chapters: ["Relations & Functions", "Sequences & Series", "Binomial Theorem"], lectures: 24 },
       { id: "s5", subject: "Calculus", chapters: ["Limits & Derivatives", "Continuity", "Integrals"], lectures: 24 },
@@ -320,8 +312,12 @@ export const STATIC_COURSES: Course[] = [
     totalStudents: 4100,
     rating: 4.8,
     createdAt: "2024-02-01T00:00:00Z",
-    activeBatchCount: 4,
-    nextBatchDate: "2026-04-28",
+    classLevel: "Class 8-10",
+    maxStudents: 80,
+    startDate: "2026-04-28",
+    endDate: null,
+    subjectsOverview: ["Science", "English", "Social Science"],
+    isActive: true,
     curriculum: [
       { id: "s7", subject: "Mathematics", chapters: ["Algebra", "Mensuration", "Data Handling"], lectures: 16 },
       { id: "s8", subject: "Science", chapters: ["Matter & Energy", "Living World", "Natural Phenomena"], lectures: 16 },

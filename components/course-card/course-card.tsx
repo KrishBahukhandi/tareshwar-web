@@ -9,16 +9,22 @@ type CourseCardProps = {
   course: Course;
 };
 
-function formatBatchDate(value: string | null) {
+function formatCourseDate(value: string | null) {
   if (!value) {
-    return "Batch dates announced after publishing";
+    return "Schedule announced after publishing";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Schedule announced after publishing";
   }
 
   return new Intl.DateTimeFormat("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric"
-  }).format(new Date(value));
+  }).format(date);
 }
 
 export function CourseCard({ course }: CourseCardProps) {
@@ -42,7 +48,7 @@ export function CourseCard({ course }: CourseCardProps) {
             {course.category}
           </span>
           <span className="text-sm font-semibold text-teal">
-            {course.activeBatchCount > 0 ? `${course.activeBatchCount} active batches` : "No active batch"}
+            {course.isActive ? "Open for enrollment" : "Currently inactive"}
           </span>
         </div>
         <h3 className="mt-5 font-heading text-2xl font-bold text-ink">{course.title}</h3>
@@ -59,7 +65,7 @@ export function CourseCard({ course }: CourseCardProps) {
           </div>
           <div className="flex items-center gap-3">
             <CalendarDays className="h-4 w-4 text-teal" />
-            <span>{formatBatchDate(course.nextBatchDate)}</span>
+            <span>{formatCourseDate(course.startDate)}</span>
           </div>
           <div className="flex items-center gap-3">
             <IndianRupee className="h-4 w-4 text-teal" />

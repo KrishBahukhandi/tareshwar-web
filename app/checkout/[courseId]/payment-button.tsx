@@ -17,16 +17,14 @@ declare global {
 
 type PaymentButtonProps = {
   courseId: string;
-  batches: {
-    id: string;
-    name: string;
-    startDate: string | null;
+  course: {
     teacher: string;
+    startDate: string | null;
     description: string | null;
-  }[];
+  };
 };
 
-function formatBatchDate(date: string | null) {
+function formatCourseDate(date: string | null) {
   if (!date) {
     return "Start date will be announced";
   }
@@ -38,27 +36,17 @@ function formatBatchDate(date: string | null) {
   }).format(new Date(date));
 }
 
-export function PaymentButton({ courseId, batches }: PaymentButtonProps) {
+export function PaymentButton({ courseId, course }: PaymentButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [selectedBatchId, setSelectedBatchId] = useState(batches[0]?.id ?? "");
-  const selectedBatch = batches.find((batch) => batch.id === selectedBatchId) ?? null;
 
   const handlePayment = async () => {
-    if (!selectedBatchId) {
-      setError("Please select a batch before continuing.");
-      return;
-    }
-
     setError("");
     setIsLoading(true);
 
     try {
-      const order = await createCheckoutOrder({
-        courseId,
-        batchId: selectedBatchId
-      });
+      const order = await createCheckoutOrder({ courseId });
 
       if (!window.Razorpay) {
         throw new Error("Razorpay checkout failed to load.");
@@ -95,8 +83,7 @@ export function PaymentButton({ courseId, batches }: PaymentButtonProps) {
         },
         notes: {
           course_id: order.courseId,
-          teacher_name: order.teacherName,
-          batch_name: order.batchName
+          teacher_name: order.teacherName
         },
         theme: {
           color: "#10212B"
@@ -131,43 +118,24 @@ export function PaymentButton({ courseId, batches }: PaymentButtonProps) {
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
-      <div className="mb-5">
-        <label htmlFor="batch" className="mb-2 block text-sm font-medium text-cream/75">
-          Select batch
-        </label>
-        <select
-          id="batch"
-          value={selectedBatchId}
-          onChange={(event) => setSelectedBatchId(event.target.value)}
-          className="w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-base text-white outline-none transition focus:border-coral"
-        >
-          {batches.map((batch) => (
-            <option key={batch.id} value={batch.id} className="bg-ink text-white">
-              {batch.name} • {formatBatchDate(batch.startDate)}
-            </option>
-          ))}
-        </select>
-      </div>
-      {selectedBatch ? (
-        <div className="mb-5 rounded-3xl border border-white/10 bg-white/5 p-4">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <p className="text-sm text-cream/60">Teacher</p>
-              <p className="mt-1 font-semibold text-white">{selectedBatch.teacher}</p>
-            </div>
-            <div>
-              <p className="text-sm text-cream/60">Batch start</p>
-              <p className="mt-1 font-semibold text-white">{formatBatchDate(selectedBatch.startDate)}</p>
-            </div>
+      <div className="mb-5 rounded-3xl border border-white/10 bg-white/5 p-4">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <p className="text-sm text-cream/60">Teacher</p>
+            <p className="mt-1 font-semibold text-white">{course.teacher}</p>
           </div>
-          <div className="mt-3">
-            <p className="text-sm text-cream/60">Batch notes</p>
-            <p className="mt-1 font-semibold text-white">
-              {selectedBatch.description || "No additional batch description has been published yet."}
-            </p>
+          <div>
+            <p className="text-sm text-cream/60">Course start</p>
+            <p className="mt-1 font-semibold text-white">{formatCourseDate(course.startDate)}</p>
           </div>
         </div>
-      ) : null}
+        <div className="mt-3">
+          <p className="text-sm text-cream/60">Course notes</p>
+          <p className="mt-1 font-semibold text-white">
+            {course.description || "No additional course details have been published yet."}
+          </p>
+        </div>
+      </div>
       {error ? (
         <div className="mb-4 rounded-2xl border border-coral/20 bg-coral/10 px-4 py-3 text-sm text-coral">
           {error}

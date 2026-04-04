@@ -18,7 +18,7 @@ export default async function DashboardCoursesPage() {
   const { data: enrollments } = await supabase
     .from("enrollments")
     .select(
-      "id, progress_percent, enrolled_at, batch:batches(id, batch_name, start_date, end_date, course:courses(id, title, description, thumbnail_url, total_lectures, teacher:users(name)))"
+      "id, progress_percent, enrolled_at, course:courses(id, title, description, thumbnail_url, total_lectures, class_level, teacher:users(name))"
     )
     .eq("student_id", student.id)
     .order("enrolled_at", { ascending: false });
@@ -33,8 +33,7 @@ export default async function DashboardCoursesPage() {
       <div className="mt-12 grid gap-8 lg:grid-cols-2">
         {(enrollments ?? []).length ? (
           enrollments?.map((entry) => {
-            const batch = firstRelation(entry.batch);
-            const course = firstRelation(batch?.course);
+            const course = firstRelation(entry.course);
             const teacher = firstRelation(course?.teacher);
 
             return (
@@ -47,7 +46,7 @@ export default async function DashboardCoursesPage() {
                   progressPercent={Number(entry.progress_percent ?? 0)}
                 />
                 <p className="px-3 text-sm text-slate">
-                  Batch: {batch?.batch_name ?? "Assigned batch"}
+                  {course?.class_level ?? "Course access active"}
                 </p>
               </div>
             );

@@ -23,11 +23,17 @@ function formatDate(value: string | null) {
     return "To be announced";
   }
 
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "To be announced";
+  }
+
   return new Intl.DateTimeFormat("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric"
-  }).format(new Date(value));
+  }).format(date);
 }
 
 export async function generateStaticParams() {
@@ -44,35 +50,49 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: CoursePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const courseId = getCourseIdFromSlug(slug);
-  const course = await getCourseById(courseId);
+  try {
+    const { slug } = await params;
+    const courseId = getCourseIdFromSlug(slug);
+    const course = await getCourseById(courseId);
 
-  if (!course) {
+    if (!course) {
+      return buildMetadata({
+        title: "Course Not Found",
+        description: "The requested course could not be found.",
+        path: "/courses"
+      });
+    }
+
+    return buildMetadata({
+      title: `${course.title} by ${course.teacherName}`,
+      description: course.description,
+      keywords: [
+        `${course.title} online`,
+        `${course.category} coaching`,
+        `${course.teacherName} course`,
+        "exam preparation course"
+      ],
+      path: getCoursePath(course),
+      image: course.thumbnail
+    });
+  } catch {
     return buildMetadata({
       title: "Course Not Found",
-      description: "The requested course could not be found.",
+      description: "The requested course could not be loaded.",
       path: "/courses"
     });
   }
-
-  return buildMetadata({
-    title: `${course.title} by ${course.teacherName}`,
-    description: course.description,
-    keywords: [
-      `${course.title} online`,
-      `${course.category} coaching`,
-      `${course.teacherName} course`,
-      "exam preparation course"
-    ],
-    path: getCoursePath(course),
-    image: course.thumbnail
-  });
 }
 
 export default async function CourseDetailPage({ params }: CoursePageProps) {
-  const { slug } = await params;
-  const course = await getCourseById(getCourseIdFromSlug(slug));
+  let course = null;
+
+  try {
+    const { slug } = await params;
+    course = await getCourseById(getCourseIdFromSlug(slug));
+  } catch {
+    course = null;
+  }
 
   if (!course) {
     notFound();
@@ -131,8 +151,8 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 <p className="mt-2 font-semibold text-white">{course.lectureCount}</p>
               </div>
               <div className="rounded-3xl bg-white/10 px-5 py-4 backdrop-blur">
-                <p className="text-sm text-white/70">Active batches</p>
-                <p className="mt-2 font-semibold text-white">{course.activeBatchCount}</p>
+                <p className="text-sm text-white/70">Enrollment</p>
+                <p className="mt-2 font-semibold text-white">{course.isActive ? "Open" : "Closed"}</p>
               </div>
             </div>
 
@@ -182,8 +202,8 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </div>
               <div className="rounded-3xl bg-white/10 p-4">
                 <Calendar className="h-5 w-5 text-white" />
-                <p className="mt-3 text-sm text-white/70">Next batch</p>
-                <p className="mt-1 font-semibold text-white">{formatDate(course.nextBatchDate)}</p>
+                <p className="mt-3 text-sm text-white/70">Course start</p>
+                <p className="mt-1 font-semibold text-white">{formatDate(course.startDate)}</p>
               </div>
             </div>
           </div>
@@ -211,8 +231,8 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 </p>
               </div>
               <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
-                <p className="text-sm text-slate">Published subjects</p>
-                <p className="mt-2 text-xl font-semibold text-ink">{course.curriculum.length}</p>
+                <p className="text-sm text-slate">Class level</p>
+                <p className="mt-2 text-xl font-semibold text-ink">{course.classLevel ?? "Not set"}</p>
               </div>
               <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
                 <p className="text-sm text-slate">Published lectures</p>
@@ -221,7 +241,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             </div>
             <p className="mt-6 text-base leading-8 text-slate">
               This page reflects the live course record in Supabase. Only published curriculum,
-              active batches, pricing, and teacher assignment are shown here.
+              schedule, pricing, and teacher assignment are shown here.
             </p>
           </section>
 
@@ -307,7 +327,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               ₹{course.price.toLocaleString("en-IN")}
             </p>
             <p className="mt-3 text-base text-cream/75">
-              Purchase grants access to the published course batch and your student learning area.
+              Purchase grants access to this published course and your student learning area.
             </p>
             <TrackedLink
               href={`/checkout/${encodeURIComponent(course.id)}`}
@@ -336,8 +356,8 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               <div className="flex items-start gap-3">
                 <Calendar className="mt-0.5 h-5 w-5 text-coral" />
                 <div>
-                  <p className="text-sm font-medium text-cream/70">Next active batch</p>
-                  <p className="mt-1 text-base text-cream">{formatDate(course.nextBatchDate)}</p>
+                  <p className="text-sm font-medium text-cream/70">Course start</p>
+                  <p className="mt-1 text-base text-cream">{formatDate(course.startDate)}</p>
                 </div>
               </div>
             </div>

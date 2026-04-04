@@ -33,16 +33,12 @@ export async function saveLectureProgress(input: {
     throw new Error("Lecture course could not be determined.");
   }
 
-  const { data: enrollmentRows } = await supabase
+  const { data: matchingEnrollment } = await supabase
     .from("enrollments")
-    .select("id, batch:batches(id, course_id)")
-    .eq("student_id", student.id);
-
-  const matchingEnrollment = (enrollmentRows ?? []).find((entry) => {
-    const batch = firstRelation(entry.batch);
-
-    return batch?.course_id === courseId;
-  });
+    .select("id")
+    .eq("student_id", student.id)
+    .eq("course_id", courseId)
+    .maybeSingle();
 
   if (!matchingEnrollment) {
     throw new Error("You are not enrolled in this course.");

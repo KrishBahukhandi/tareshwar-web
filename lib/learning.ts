@@ -5,7 +5,6 @@ type SubjectRow = {
   id: string;
   name: string;
   sort_order: number;
-  batch_id: string | null;
 };
 
 type ChapterRow = {
@@ -67,8 +66,7 @@ export type LearningCourse = {
   description: string;
   thumbnail: string;
   teacherName: string;
-  batchId: string;
-  batchName: string;
+  classLevel: string | null;
   subjects: LearningSubject[];
   totalLectures: number;
   completedLectures: number;
@@ -103,32 +101,24 @@ export async function getStudentCourseLearning(courseId: string, studentId: stri
   const supabase = await createSupabaseServerClient();
   const courseMeta = await getCourseById(courseId);
 
-  const { data: enrollments } = await supabase
+  const { data: matchingEnrollment } = await supabase
     .from("enrollments")
-    .select("id, progress_percent, batch:batches(id, batch_name, course_id)")
-    .eq("student_id", studentId);
+    .select("id, progress_percent, course_id")
+    .eq("student_id", studentId)
+    .eq("course_id", courseId)
+    .maybeSingle();
 
-  const matchingEnrollment = (enrollments ?? []).find((entry) => {
-    const batch = firstRelation(entry.batch);
-
-    return batch?.course_id === courseId;
-  });
-
-  const batch = firstRelation(matchingEnrollment?.batch);
-
-  if (!matchingEnrollment || !batch) {
+  if (!matchingEnrollment) {
     return null;
   }
 
   const { data: subjectRows } = await supabase
     .from("subjects")
-    .select("id, name, sort_order, batch_id")
+    .select("id, name, sort_order")
     .eq("course_id", courseId)
     .order("sort_order", { ascending: true });
 
-  const filteredSubjects = (subjectRows ?? []).filter(
-    (subject) => !subject.batch_id || subject.batch_id === batch.id
-  ) as SubjectRow[];
+  const filteredSubjects = (subjectRows ?? []) as SubjectRow[];
 
   if (!filteredSubjects.length && courseMeta) {
     return {
@@ -137,8 +127,7 @@ export async function getStudentCourseLearning(courseId: string, studentId: stri
       description: courseMeta.description,
       thumbnail: courseMeta.thumbnail,
       teacherName: courseMeta.teacherName,
-      batchId: batch.id,
-      batchName: batch.batch_name,
+      classLevel: courseMeta.classLevel,
       subjects: [],
       totalLectures: 0,
       completedLectures: 0,
@@ -238,8 +227,7 @@ export async function getStudentCourseLearning(courseId: string, studentId: stri
     description: courseMeta?.description ?? "Continue learning from your enrolled course.",
     thumbnail: courseMeta?.thumbnail ?? "",
     teacherName: courseMeta?.teacherName ?? "Faculty",
-    batchId: batch.id,
-    batchName: batch.batch_name,
+    classLevel: courseMeta?.classLevel ?? null,
     subjects,
     totalLectures: flatLectures.length,
     completedLectures,

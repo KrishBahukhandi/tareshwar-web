@@ -10,8 +10,6 @@ import { createSupabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { createSupabaseServerClient } from "@/lib/supabaseServerClient";
 
 type PaymentNotes = {
-  batch_id: string;
-  batch_name: string;
   course_id: string;
   course_title: string;
   razorpay_order_id: string;
@@ -35,7 +33,7 @@ export async function proceedToPayment(courseId: string) {
   redirect(`/checkout/${courseId}`);
 }
 
-export async function createCheckoutOrder(input: { courseId: string; batchId: string }) {
+export async function createCheckoutOrder(input: { courseId: string }) {
   const student = await requireStudent();
   const supabase = createSupabaseAdminClient() ?? (await createSupabaseServerClient());
   const course = await getCourseById(input.courseId);
@@ -44,16 +42,8 @@ export async function createCheckoutOrder(input: { courseId: string; batchId: st
     throw new Error("Course not found.");
   }
 
-  const { data: batchRow, error: batchError } = await supabase
-    .from("batches")
-    .select("id, course_id, batch_name, is_active, start_date")
-    .eq("course_id", input.courseId)
-    .eq("id", input.batchId)
-    .eq("is_active", true)
-    .maybeSingle();
-
-  if (batchError || !batchRow) {
-    throw new Error("Selected batch is not available for this course.");
+  if (!course.isActive) {
+    throw new Error("This course is not open for enrollment right now.");
   }
 
   const order = await createRazorpayOrder({
@@ -61,14 +51,11 @@ export async function createCheckoutOrder(input: { courseId: string; batchId: st
     receipt: `course_${course.id}_${student.id.slice(0, 8)}`,
     notes: {
       course_id: course.id,
-      batch_id: batchRow.id,
       student_id: student.id
     }
   });
 
   const paymentNotes: PaymentNotes = {
-    batch_id: batchRow.id,
-    batch_name: batchRow.batch_name,
     course_id: course.id,
     course_title: course.title,
     razorpay_order_id: order.id
@@ -99,9 +86,7 @@ export async function createCheckoutOrder(input: { courseId: string; batchId: st
     courseTitle: course.title,
     teacherName: course.teacherName,
     studentName: student.name,
-    studentEmail: student.email,
-    batchId: batchRow.id,
-    batchName: batchRow.batch_name
+    studentEmail: student.email
   };
 }
 
@@ -136,7 +121,7 @@ export async function verifyCheckoutPayment(input: {
 
   const paymentNotes = parsePaymentNotes(paymentRow.notes);
 
-  if (!paymentNotes?.batch_id || !paymentNotes.course_id) {
+  if (!paymentNotes?.course_id) {
     throw new Error("Payment metadata is incomplete.");
   }
 
@@ -144,13 +129,13 @@ export async function verifyCheckoutPayment(input: {
     .from("enrollments")
     .select("id")
     .eq("student_id", student.id)
-    .eq("batch_id", paymentNotes.batch_id)
+    .eq("course_id", paymentNotes.course_id)
     .maybeSingle();
 
   if (!existingEnrollment) {
     const { error: enrollmentError } = await supabase.from("enrollments").insert({
       student_id: student.id,
-      batch_id: paymentNotes.batch_id
+      course_id: paymentNotes.course_id
     });
 
     if (enrollmentError) {
@@ -180,7 +165,6 @@ export async function verifyCheckoutPayment(input: {
     eventType: "checkout_completed",
     eventData: {
       course_id: paymentNotes.course_id,
-      batch_id: paymentNotes.batch_id,
       razorpay_order_id: input.orderId,
       razorpay_payment_id: input.paymentId
     }
@@ -213,8 +197,6 @@ export async function markCheckoutFailed(input: { orderId?: string; reason?: str
 
   const failedNotes: PaymentNotes = {
     ...(parsePaymentNotes(paymentRow.notes) ?? {
-      batch_id: "",
-      batch_name: "",
       course_id: "",
       course_title: "",
       razorpay_order_id: input.orderId

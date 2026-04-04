@@ -6,7 +6,7 @@ type LiveClassCardProps = {
   teacherName: string;
   startTime: string;
   meetingLink: string;
-  batchName?: string | null;
+  courseLabel?: string | null;
 };
 
 export function LiveClassCard({
@@ -14,7 +14,7 @@ export function LiveClassCard({
   teacherName,
   startTime,
   meetingLink,
-  batchName
+  courseLabel
 }: LiveClassCardProps) {
   return (
     <article className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
@@ -33,7 +33,7 @@ export function LiveClassCard({
                 timeStyle: "short"
               })}
             </span>
-            {batchName ? <span>{batchName}</span> : null}
+            {courseLabel ? <span>{courseLabel}</span> : null}
           </div>
         </div>
 

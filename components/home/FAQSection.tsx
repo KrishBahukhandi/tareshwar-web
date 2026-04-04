@@ -6,11 +6,11 @@ import { ChevronDown } from "lucide-react";
 const faqs = [
   {
     q: "Which classes and subjects do Tareshwar Tutorials cover?",
-    a: "We offer live coaching for Class 8 through Class 12 across core CBSE and state board subjects — Mathematics, Science (Physics, Chemistry, Biology), English, and Social Science. Each batch is structured around the specific class's syllabus and exam pattern."
+    a: "We offer live coaching for Class 8 through Class 12 across core CBSE and state board subjects — Mathematics, Science (Physics, Chemistry, Biology), English, and Social Science. Each course is structured around the specific class's syllabus and exam pattern."
   },
   {
     q: "Are the classes live or recorded?",
-    a: "Every batch includes live classes taught by faculty in real time. All sessions are recorded and available in your dashboard the same evening, so if your child misses a class they can catch up without falling behind."
+    a: "Every course includes live classes taught by faculty in real time. All sessions are recorded and available in your dashboard the same evening, so if your child misses a class they can catch up without falling behind."
   },
   {
     q: "How does doubt resolution work?",
@@ -18,11 +18,11 @@ const faqs = [
   },
   {
     q: "Is this suitable for Class 8 and 9 students, not just board classes?",
-    a: "Yes. We specifically offer Foundation batches for Class 8, 9, and 10 to build strong subject basics before boards. Starting early gives students a significant advantage by the time they reach Class 10 and 12."
+    a: "Yes. We specifically offer Foundation courses for Class 8, 9, and 10 to build strong subject basics before boards. Starting early gives students a significant advantage by the time they reach Class 10 and 12."
   },
   {
     q: "What happens immediately after enrollment?",
-    a: "Enrollment confirmation and batch joining instructions are sent instantly. Students get full access to their dashboard, all published recordings for their batch, and live class schedule — with no waiting period."
+    a: "Enrollment confirmation and course access details are sent instantly. Students get full access to their dashboard, all published recordings for their course, and the live class schedule with no waiting period."
   },
   {
     q: "Is there a refund policy?",
