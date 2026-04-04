@@ -17,6 +17,38 @@ type PaymentNotes = {
   failure_reason?: string;
 };
 
+async function ensureEnrollmentForCourse(input: {
+  supabase: any;
+  studentId: string;
+  courseId: string;
+}) {
+  const { data: existingEnrollment } = await input.supabase
+    .from("enrollments")
+    .select("id")
+    .eq("student_id", input.studentId)
+    .eq("course_id", input.courseId)
+    .maybeSingle();
+
+  if (existingEnrollment) {
+    return existingEnrollment.id;
+  }
+
+  const { data: enrollmentRow, error: enrollmentError } = await input.supabase
+    .from("enrollments")
+    .insert({
+      student_id: input.studentId,
+      course_id: input.courseId
+    })
+    .select("id")
+    .maybeSingle();
+
+  if (enrollmentError) {
+    throw new Error("Enrollment failed for this course.");
+  }
+
+  return enrollmentRow?.id ?? null;
+}
+
 function parsePaymentNotes(notes: string | null): PaymentNotes | null {
   if (!notes) {
     return null;
@@ -44,6 +76,53 @@ export async function createCheckoutOrder(input: { courseId: string }) {
 
   if (!course.isActive) {
     throw new Error("This course is not open for enrollment right now.");
+  }
+
+  if (course.price <= 0) {
+    await ensureEnrollmentForCourse({
+      supabase,
+      studentId: student.id,
+      courseId: course.id
+    });
+
+    const freeTransactionId = `free_${course.id}_${student.id}`;
+    const { data: existingPayment } = await supabase
+      .from("payments")
+      .select("id")
+      .eq("student_id", student.id)
+      .eq("course_id", course.id)
+      .eq("transaction_id", freeTransactionId)
+      .maybeSingle();
+
+    if (!existingPayment) {
+      await supabase.from("payments").insert({
+        student_id: student.id,
+        course_id: course.id,
+        amount: 0,
+        payment_status: "completed",
+        payment_method: "free",
+        transaction_id: freeTransactionId,
+        notes: JSON.stringify({
+          course_id: course.id,
+          course_title: course.title,
+          razorpay_order_id: "free_course"
+        } satisfies PaymentNotes)
+      });
+    }
+
+    await trackServerAnalyticsEvent({
+      userId: student.id,
+      eventType: "checkout_completed",
+      eventData: {
+        course_id: course.id,
+        checkout_mode: "free"
+      }
+    });
+
+    return {
+      mode: "free" as const,
+      courseId: course.id
+    };
   }
 
   const order = await createRazorpayOrder({
@@ -78,6 +157,7 @@ export async function createCheckoutOrder(input: { courseId: string }) {
   const { keyId } = getRazorpayPublicConfig();
 
   return {
+    mode: "paid" as const,
     keyId,
     orderId: order.id,
     amount: order.amount,
@@ -125,23 +205,11 @@ export async function verifyCheckoutPayment(input: {
     throw new Error("Payment metadata is incomplete.");
   }
 
-  const { data: existingEnrollment } = await supabase
-    .from("enrollments")
-    .select("id")
-    .eq("student_id", student.id)
-    .eq("course_id", paymentNotes.course_id)
-    .maybeSingle();
-
-  if (!existingEnrollment) {
-    const { error: enrollmentError } = await supabase.from("enrollments").insert({
-      student_id: student.id,
-      course_id: paymentNotes.course_id
-    });
-
-    if (enrollmentError) {
-      throw new Error("Enrollment failed after payment verification.");
-    }
-  }
+  await ensureEnrollmentForCourse({
+    supabase,
+    studentId: student.id,
+    courseId: paymentNotes.course_id
+  });
 
   const completedNotes: PaymentNotes = {
     ...paymentNotes,

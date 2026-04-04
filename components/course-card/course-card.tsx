@@ -4,6 +4,7 @@ import { BookOpen, CalendarDays, IndianRupee, UserRound } from "lucide-react";
 
 import { getCoursePath } from "@/lib/course-paths";
 import type { Course } from "@/lib/courses";
+import { formatCoursePrice } from "@/lib/pricing";
 
 type CourseCardProps = {
   course: Course;
@@ -69,7 +70,7 @@ export function CourseCard({ course }: CourseCardProps) {
           </div>
           <div className="flex items-center gap-3">
             <IndianRupee className="h-4 w-4 text-teal" />
-            <span>{course.price.toLocaleString("en-IN")}</span>
+            <span>{formatCoursePrice(course.price)}</span>
           </div>
         </div>
 

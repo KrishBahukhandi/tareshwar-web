@@ -48,6 +48,12 @@ export function PaymentButton({ courseId, course }: PaymentButtonProps) {
     try {
       const order = await createCheckoutOrder({ courseId });
 
+      if (order.mode === "free") {
+        router.push(`/payment-success?course=${encodeURIComponent(order.courseId)}`);
+        router.refresh();
+        return;
+      }
+
       if (!window.Razorpay) {
         throw new Error("Razorpay checkout failed to load.");
       }
@@ -147,7 +153,7 @@ export function PaymentButton({ courseId, course }: PaymentButtonProps) {
         disabled={isLoading}
         className="inline-flex w-full justify-center rounded-full bg-coral px-6 py-3 font-semibold text-white transition hover:bg-coral/90 disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {isLoading ? "Opening Razorpay..." : "Buy Course"}
+        {isLoading ? "Processing..." : "Enroll Now"}
       </button>
     </>
   );

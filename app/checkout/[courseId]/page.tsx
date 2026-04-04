@@ -5,6 +5,7 @@ import { TrackEventOnView } from "@/components/analytics/TrackEventOnView";
 import { PageContainer } from "@/components/layout/page-container";
 import { requireStudent } from "@/lib/auth-server";
 import { getCourseById } from "@/lib/courses";
+import { formatCoursePrice } from "@/lib/pricing";
 
 import { PaymentButton } from "./payment-button";
 
@@ -153,9 +154,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
             </div>
             <div>
               <p className="text-sm text-cream/60">Course price</p>
-              <p className="mt-2 font-heading text-5xl font-bold">
-                ₹{course.price.toLocaleString("en-IN")}
-              </p>
+              <p className="mt-2 font-heading text-5xl font-bold">{formatCoursePrice(course.price)}</p>
             </div>
             <div>
               <p className="text-sm text-cream/60">Published learning structure</p>

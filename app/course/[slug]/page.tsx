@@ -9,6 +9,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { PageContainer } from "@/components/layout/page-container";
 import { getCourseById, getCourses } from "@/lib/courses";
 import { getCourseIdFromSlug, getCoursePath } from "@/lib/course-paths";
+import { formatCoursePrice } from "@/lib/pricing";
 import { buildMetadata, siteConfig } from "@/lib/seo";
 
 type CoursePageProps = {
@@ -220,9 +221,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
                 <p className="text-sm text-slate">Price</p>
-                <p className="mt-2 text-xl font-semibold text-ink">
-                  ₹{course.price.toLocaleString("en-IN")}
-                </p>
+                <p className="mt-2 text-xl font-semibold text-ink">{formatCoursePrice(course.price)}</p>
               </div>
               <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
                 <p className="text-sm text-slate">Rating</p>
@@ -323,9 +322,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
           <aside className="rounded-4xl bg-ink p-8 text-cream shadow-glow">
             <p className="text-sm font-medium uppercase tracking-[0.24em] text-cream/60">Enrollment</p>
-            <p className="mt-6 font-heading text-5xl font-bold">
-              ₹{course.price.toLocaleString("en-IN")}
-            </p>
+            <p className="mt-6 font-heading text-5xl font-bold">{formatCoursePrice(course.price)}</p>
             <p className="mt-3 text-base text-cream/75">
               Purchase grants access to this published course and your student learning area.
             </p>
