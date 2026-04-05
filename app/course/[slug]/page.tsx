@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, BookOpen, Calendar, Layers3, Users } from "lucide-react";
+import { BookOpen, Calendar, Layers3, Users } from "lucide-react";
 
 import { TrackEventOnView } from "@/components/analytics/TrackEventOnView";
-import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { PageContainer } from "@/components/layout/page-container";
+import { CourseActionButton } from "@/components/courses/CourseActionButton";
 import { getCourseById, getCourses } from "@/lib/courses";
-import { getCourseIdFromSlug, getCoursePath } from "@/lib/course-paths";
+import { getCourseIdFromSlug, getCoursePath, slugifyCourseTitle } from "@/lib/course-paths";
 import { formatCoursePrice } from "@/lib/pricing";
 import { buildMetadata, siteConfig } from "@/lib/seo";
 
@@ -158,19 +158,12 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             </div>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <TrackedLink
-                href={`/checkout/${encodeURIComponent(course.id)}`}
-                eventType="course_enroll_click"
-                eventData={{
-                  course_id: course.id,
-                  course_title: course.title,
-                  source: "course_hero"
-                }}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-ink transition hover:bg-sand"
-              >
-                Enroll Now
-                <ArrowRight className="h-4 w-4" />
-              </TrackedLink>
+              <CourseActionButton
+                courseId={course.id}
+                courseTitle={course.title}
+                courseSlug={`${course.id}--${slugifyCourseTitle(course.title)}`}
+                variant="hero"
+              />
               <Link
                 href="/login"
                 className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
@@ -326,18 +319,12 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             <p className="mt-3 text-base text-cream/75">
               Purchase grants access to this published course and your student learning area.
             </p>
-            <TrackedLink
-              href={`/checkout/${encodeURIComponent(course.id)}`}
-              eventType="course_enroll_click"
-              eventData={{
-                course_id: course.id,
-                course_title: course.title,
-                source: "course_sidebar"
-              }}
-              className="mt-8 inline-flex w-full justify-center rounded-full bg-coral px-6 py-3 font-semibold text-white transition hover:bg-coral/90"
-            >
-              Enroll
-            </TrackedLink>
+            <CourseActionButton
+              courseId={course.id}
+              courseTitle={course.title}
+              courseSlug={`${course.id}--${slugifyCourseTitle(course.title)}`}
+              variant="sidebar"
+            />
             <div className="mt-8 space-y-4 rounded-3xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-start gap-3">
                 <Layers3 className="mt-0.5 h-5 w-5 text-coral" />
