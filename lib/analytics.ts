@@ -3,6 +3,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
 export type AnalyticsEventType =
   | "course_view"
   | "course_enroll_click"
+  | "course_continue_click"
   | "signup"
   | "login"
   | "checkout_started"
