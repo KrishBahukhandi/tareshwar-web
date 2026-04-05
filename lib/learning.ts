@@ -1,5 +1,38 @@
 import { getCourseById } from "@/lib/courses";
 import { createSupabaseServerClient } from "@/lib/supabaseServerClient";
+import { createSupabaseAdminClient } from "@/lib/supabaseAdminClient";
+
+const STORAGE_SCHEME = "storage://";
+const SIGNED_URL_EXPIRY = 3600; // 1 hour
+
+/**
+ * Resolve a storage:// reference to a signed Supabase Storage URL.
+ * If the value is already an http(s) URL or null, returns it as-is.
+ */
+async function resolveStorageUrl(value: string | null): Promise<string | null> {
+  if (!value || !value.startsWith(STORAGE_SCHEME)) {
+    return value;
+  }
+
+  const withoutScheme = value.substring(STORAGE_SCHEME.length);
+  const slashIndex = withoutScheme.indexOf("/");
+  if (slashIndex <= 0) return value;
+
+  const bucket = withoutScheme.substring(0, slashIndex);
+  const path = withoutScheme.substring(slashIndex + 1);
+
+  // Use admin client so signed URLs work regardless of RLS
+  const admin = createSupabaseAdminClient();
+  if (!admin) {
+    // Fallback to regular server client
+    const supabase = await createSupabaseServerClient();
+    const { data } = await supabase.storage.from(bucket).createSignedUrl(path, SIGNED_URL_EXPIRY);
+    return data?.signedUrl ?? value;
+  }
+
+  const { data } = await admin.storage.from(bucket).createSignedUrl(path, SIGNED_URL_EXPIRY);
+  return data?.signedUrl ?? value;
+}
 
 type SubjectRow = {
   id: string;
@@ -181,36 +214,42 @@ export async function getStudentCourseLearning(courseId: string, studentId: stri
     lecturesByChapter.set(lecture.chapter_id, current);
   }
 
-  const subjects: LearningSubject[] = filteredSubjects.map((subject) => ({
-    id: subject.id,
-    name: subject.name,
-    sortOrder: subject.sort_order,
-    chapters: (chaptersBySubject.get(subject.id) ?? [])
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map((chapter) => ({
-        id: chapter.id,
-        name: chapter.name,
-        sortOrder: chapter.sort_order,
-        lectures: (lecturesByChapter.get(chapter.id) ?? [])
+  const subjects: LearningSubject[] = await Promise.all(
+    filteredSubjects.map(async (subject) => ({
+      id: subject.id,
+      name: subject.name,
+      sortOrder: subject.sort_order,
+      chapters: await Promise.all(
+        (chaptersBySubject.get(subject.id) ?? [])
           .sort((a, b) => a.sort_order - b.sort_order)
-          .map((lecture) => {
-            const progress = progressByLecture.get(lecture.id);
+          .map(async (chapter) => ({
+            id: chapter.id,
+            name: chapter.name,
+            sortOrder: chapter.sort_order,
+            lectures: await Promise.all(
+              (lecturesByChapter.get(chapter.id) ?? [])
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map(async (lecture) => {
+                  const progress = progressByLecture.get(lecture.id);
 
-            return {
-              id: lecture.id,
-              title: lecture.title,
-              description: lecture.description ?? "Watch the lesson and continue your progress.",
-              videoUrl: lecture.video_url,
-              notesUrl: lecture.notes_url,
-              durationSeconds: Number(lecture.duration_seconds ?? 0),
-              isFree: lecture.is_free,
-              sortOrder: lecture.sort_order,
-              watchedSeconds: Number(progress?.watched_seconds ?? 0),
-              completed: Boolean(progress?.completed)
-            };
-          })
-      }))
-  }));
+                  return {
+                    id: lecture.id,
+                    title: lecture.title,
+                    description: lecture.description ?? "Watch the lesson and continue your progress.",
+                    videoUrl: await resolveStorageUrl(lecture.video_url),
+                    notesUrl: await resolveStorageUrl(lecture.notes_url),
+                    durationSeconds: Number(lecture.duration_seconds ?? 0),
+                    isFree: lecture.is_free,
+                    sortOrder: lecture.sort_order,
+                    watchedSeconds: Number(progress?.watched_seconds ?? 0),
+                    completed: Boolean(progress?.completed)
+                  };
+                })
+            )
+          }))
+      )
+    }))
+  );
 
   const flatLectures = subjects.flatMap((subject) =>
     subject.chapters.flatMap((chapter) => chapter.lectures)
