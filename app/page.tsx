@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { HomePage } from "@/components/layout/home-page";
 import { getCourses, STATIC_COURSES } from "@/lib/courses";
 import { buildMetadata } from "@/lib/seo";
-import { getTeachers, STATIC_TEACHERS } from "@/lib/teachers";
 
 export const metadata: Metadata = buildMetadata({
   title: "Online Coaching for Class 8 to 12 School Students",
@@ -23,12 +22,11 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function Page() {
-  const [courses, teachers] = await Promise.all([getCourses(), getTeachers()]);
+  const courses = await getCourses().catch(() => []);
 
   return (
     <HomePage
       courses={courses.length ? courses : STATIC_COURSES}
-      teachers={teachers.length ? teachers : STATIC_TEACHERS}
     />
   );
 }

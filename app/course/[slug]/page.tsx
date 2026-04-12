@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BookOpen, Calendar, Layers3, Users } from "lucide-react";
+import { BookOpen, Calendar, GraduationCap, Layers3 } from "lucide-react";
 
 import { TrackEventOnView } from "@/components/analytics/TrackEventOnView";
 import { PageContainer } from "@/components/layout/page-container";
@@ -190,9 +190,9 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 <p className="mt-1 font-semibold text-white">{course.curriculum.length} subjects</p>
               </div>
               <div className="rounded-3xl bg-white/10 p-4">
-                <Users className="h-5 w-5 text-white" />
-                <p className="mt-3 text-sm text-white/70">Enrolled students</p>
-                <p className="mt-1 font-semibold text-white">{course.totalStudents.toLocaleString("en-IN")}</p>
+                <GraduationCap className="h-5 w-5 text-white" />
+                <p className="mt-3 text-sm text-white/70">Class level</p>
+                <p className="mt-1 font-semibold text-white">{course.classLevel ?? "All levels"}</p>
               </div>
               <div className="rounded-3xl bg-white/10 p-4">
                 <Calendar className="h-5 w-5 text-white" />

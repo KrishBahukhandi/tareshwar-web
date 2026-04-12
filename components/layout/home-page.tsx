@@ -16,15 +16,12 @@ import {
 } from "lucide-react";
 
 import { CourseCard } from "@/components/course-card/course-card";
-import { TeacherCard } from "@/components/teacher-card/teacher-card";
 import { FAQSection } from "@/components/home/FAQSection";
 import type { Course } from "@/lib/courses";
-import type { TeacherProfile } from "@/lib/teachers";
 import { testimonials } from "@/lib/site-data";
 
 type HomePageProps = {
   courses: Course[];
-  teachers: TeacherProfile[];
 };
 
 const EXAM_TAGS = ["Class 8", "Class 9", "Class 10", "Class 11", "Class 12 CBSE", "State Boards"];
@@ -80,7 +77,7 @@ const DIFFERENTIATORS = [
   }
 ];
 
-export function HomePage({ courses, teachers }: HomePageProps) {
+export function HomePage({ courses }: HomePageProps) {
   return (
     <div className="pb-20">
 
@@ -252,29 +249,7 @@ export function HomePage({ courses, teachers }: HomePageProps) {
         </div>
       </section>
 
-      {/* ── TEACHERS ──────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div className="max-w-2xl">
-            <span className="inline-flex rounded-full bg-teal/10 px-4 py-2 text-sm font-semibold text-teal">
-              Our Faculty
-            </span>
-            <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight text-ink">
-              Teachers with strong track records and real classroom momentum.
-            </h2>
-          </div>
-          <Link href="/teachers" className="font-semibold text-coral hover:text-coral/80">
-            Meet all mentors →
-          </Link>
-        </div>
-        <div className="mt-10 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-          {teachers.slice(0, 3).map((teacher) => (
-            <TeacherCard key={teacher.id} teacher={teacher} />
-          ))}
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ──────────────────────────────────────── */}
+{/* ── TESTIMONIALS ──────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
         <div className="rounded-[2.5rem] bg-sand px-8 py-12">
           <div className="max-w-2xl">
