@@ -10,40 +10,14 @@ type CourseDiscoveryProps = {
   courses: Course[];
 };
 
-type SortOption = "popularity" | "price-low-high" | "newest";
-
-function getExamType(course: Course) {
-  const fingerprint = `${course.title} ${course.category}`.toLowerCase();
-
-  if (fingerprint.includes("jee")) {
-    return "JEE";
-  }
-
-  if (fingerprint.includes("neet")) {
-    return "NEET";
-  }
-
-  if (fingerprint.includes("board")) {
-    return "Boards";
-  }
-
-  return "General";
-}
-
 export function CourseDiscovery({ courses }: CourseDiscoveryProps) {
   const [search, setSearch] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedTeacher, setSelectedTeacher] = useState("all");
-  const [selectedExamType, setSelectedExamType] = useState("all");
-  const [sortBy, setSortBy] = useState<SortOption>("popularity");
+  const [selectedClass, setSelectedClass] = useState("all");
 
-  const filterOptions = useMemo(
-    () => ({
-      categories: Array.from(new Set(courses.map((course) => course.category))).sort(),
-      teachers: Array.from(new Set(courses.map((course) => course.teacherName))).sort(),
-      examTypes: Array.from(new Set(courses.map((course) => getExamType(course)))).sort()
-    }),
+  const classLevels = useMemo(
+    () =>
+      Array.from(new Set(courses.map((c) => c.classLevel).filter(Boolean))).sort() as string[],
     [courses]
   );
 
@@ -51,55 +25,29 @@ export function CourseDiscovery({ courses }: CourseDiscoveryProps) {
     const normalizedSearch = search.trim().toLowerCase();
 
     const matchesPrice = (course: Course) => {
-      if (selectedPrice === "all") {
-        return true;
-      }
-
-      if (selectedPrice === "under-15000") {
-        return course.price < 15000;
-      }
-
-      if (selectedPrice === "15000-25000") {
-        return course.price >= 15000 && course.price <= 25000;
-      }
-
-      if (selectedPrice === "above-25000") {
-        return course.price > 25000;
-      }
-
+      if (selectedPrice === "all") return true;
+      if (selectedPrice === "under-13000") return course.price < 13000;
+      if (selectedPrice === "13000-15000") return course.price >= 13000 && course.price <= 15000;
+      if (selectedPrice === "above-15000") return course.price > 15000;
       return true;
     };
 
     return [...courses]
       .filter((course) => {
-        const searchable = `${course.title} ${course.description} ${course.category} ${course.teacherName}`.toLowerCase();
-
+        const searchable =
+          `${course.title} ${course.description} ${course.category} ${course.teacherName}`.toLowerCase();
         return normalizedSearch ? searchable.includes(normalizedSearch) : true;
       })
       .filter(matchesPrice)
-      .filter((course) => (selectedCategory === "all" ? true : course.category === selectedCategory))
-      .filter((course) => (selectedTeacher === "all" ? true : course.teacherName === selectedTeacher))
-      .filter((course) => (selectedExamType === "all" ? true : getExamType(course) === selectedExamType))
-      .sort((left, right) => {
-        if (sortBy === "price-low-high") {
-          return left.price - right.price;
-        }
-
-        if (sortBy === "newest") {
-          return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
-        }
-
-        return right.totalStudents - left.totalStudents;
-      });
-  }, [courses, search, selectedPrice, selectedCategory, selectedTeacher, selectedExamType, sortBy]);
+      .filter((course) =>
+        selectedClass === "all" ? true : course.classLevel === selectedClass
+      );
+  }, [courses, search, selectedPrice, selectedClass]);
 
   const resetFilters = () => {
     setSearch("");
     setSelectedPrice("all");
-    setSelectedCategory("all");
-    setSelectedTeacher("all");
-    setSelectedExamType("all");
-    setSortBy("popularity");
+    setSelectedClass("all");
   };
 
   return (
@@ -111,6 +59,7 @@ export function CourseDiscovery({ courses }: CourseDiscoveryProps) {
         </div>
 
         <div className="mt-6 space-y-5">
+          {/* Search */}
           <div>
             <label htmlFor="search" className="text-sm font-semibold text-ink">
               Search courses
@@ -122,50 +71,28 @@ export function CourseDiscovery({ courses }: CourseDiscoveryProps) {
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search by title, teacher, exam"
+                placeholder="Search by title or subject"
                 className="w-full rounded-2xl border border-ink/10 bg-cream px-11 py-3 text-sm text-ink outline-none transition focus:border-coral"
               />
             </div>
           </div>
 
+          {/* Price */}
           <FilterSelect label="Price" value={selectedPrice} onChange={setSelectedPrice}>
             <option value="all">All prices</option>
-            <option value="under-15000">Under Rs. 15,000</option>
-            <option value="15000-25000">Rs. 15,000 to 25,000</option>
-            <option value="above-25000">Above Rs. 25,000</option>
+            <option value="under-13000">Under ₹13,000</option>
+            <option value="13000-15000">₹13,000 – ₹15,000</option>
+            <option value="above-15000">Above ₹15,000</option>
           </FilterSelect>
 
-          <FilterSelect label="Category" value={selectedCategory} onChange={setSelectedCategory}>
-            <option value="all">All categories</option>
-            {filterOptions.categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+          {/* Class level */}
+          <FilterSelect label="Class" value={selectedClass} onChange={setSelectedClass}>
+            <option value="all">All classes</option>
+            {classLevels.map((level) => (
+              <option key={level} value={level}>
+                {level}
               </option>
             ))}
-          </FilterSelect>
-
-          <FilterSelect label="Teacher" value={selectedTeacher} onChange={setSelectedTeacher}>
-            <option value="all">All teachers</option>
-            {filterOptions.teachers.map((teacher) => (
-              <option key={teacher} value={teacher}>
-                {teacher}
-              </option>
-            ))}
-          </FilterSelect>
-
-          <FilterSelect label="Exam type" value={selectedExamType} onChange={setSelectedExamType}>
-            <option value="all">All exam types</option>
-            {filterOptions.examTypes.map((examType) => (
-              <option key={examType} value={examType}>
-                {examType}
-              </option>
-            ))}
-          </FilterSelect>
-
-          <FilterSelect label="Sort by" value={sortBy} onChange={(value) => setSortBy(value as SortOption)}>
-            <option value="popularity">Most students</option>
-            <option value="newest">Newest</option>
-            <option value="price-low-high">Price low-high</option>
           </FilterSelect>
 
           <button
@@ -188,8 +115,7 @@ export function CourseDiscovery({ courses }: CourseDiscoveryProps) {
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-7 text-slate">
-              Search by topic, teacher, or exam goal, then narrow the catalog with pricing,
-              category, and recency filters.
+              Filter by price or class level to find the right program for you.
             </p>
           </div>
         </div>

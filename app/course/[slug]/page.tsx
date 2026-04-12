@@ -207,20 +207,11 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
       <div className="mt-12 grid gap-8 lg:grid-cols-[1.45fr_0.85fr]">
         <div className="space-y-8">
           <section className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
-            <span className="inline-flex rounded-full bg-coral/10 px-4 py-2 text-sm font-semibold text-coral">
-              Course Snapshot
-            </span>
-            <h2 className="mt-5 font-heading text-3xl font-bold text-ink">What is currently confirmed</h2>
+            <h2 className="font-heading text-3xl font-bold text-ink">Course Overview</h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
                 <p className="text-sm text-slate">Price</p>
                 <p className="mt-2 text-xl font-semibold text-ink">{formatCoursePrice(course.price)}</p>
-              </div>
-              <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
-                <p className="text-sm text-slate">Rating</p>
-                <p className="mt-2 text-xl font-semibold text-ink">
-                  {course.rating ? `${course.rating.toFixed(1)} / 5` : "Not published yet"}
-                </p>
               </div>
               <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
                 <p className="text-sm text-slate">Class level</p>
@@ -230,11 +221,11 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 <p className="text-sm text-slate">Published lectures</p>
                 <p className="mt-2 text-xl font-semibold text-ink">{course.lectureCount}</p>
               </div>
+              <div className="rounded-3xl border border-ink/10 bg-cream px-5 py-4">
+                <p className="text-sm text-slate">Enrollment</p>
+                <p className="mt-2 text-xl font-semibold text-ink">{course.isActive ? "Open" : "Closed"}</p>
+              </div>
             </div>
-            <p className="mt-6 text-base leading-8 text-slate">
-              This page reflects the live course record in Supabase. Only published curriculum,
-              schedule, pricing, and teacher assignment are shown here.
-            </p>
           </section>
 
           <section className="rounded-4xl border border-ink/10 bg-white p-8 shadow-glow">
