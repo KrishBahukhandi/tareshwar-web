@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -6,8 +7,11 @@ import {
   ChevronRight,
   Clock,
   Download,
+  LayoutDashboard,
   MessageCircle,
   Phone,
+  PlayCircle,
+  Radio,
   Smartphone,
   Star,
   Trophy,
@@ -18,10 +22,13 @@ import {
 import { CourseCard } from "@/components/course-card/course-card";
 import { FAQSection } from "@/components/home/FAQSection";
 import type { Course } from "@/lib/courses";
+import type { EnrolledCourseSummary } from "@/lib/learning";
 import { testimonials } from "@/lib/site-data";
 
 type HomePageProps = {
   courses: Course[];
+  student?: { id: string; name: string; email: string } | null;
+  enrolledCourses?: EnrolledCourseSummary[];
 };
 
 const EXAM_TAGS = ["Class 8", "Class 9", "Class 10", "Class 11", "Class 12 CBSE", "State Boards"];
@@ -81,12 +88,17 @@ const DIFFERENTIATORS = [
   }
 ];
 
-export function HomePage({ courses }: HomePageProps) {
+export function HomePage({ courses, student, enrolledCourses = [] }: HomePageProps) {
+  const isLoggedIn = !!student;
+
   return (
     <div className="pb-20">
 
-      {/* ── HERO ──────────────────────────────────────────────── */}
+      {/* ── HERO — switches based on auth ─────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 pt-10 lg:px-8 lg:pt-16">
+        {isLoggedIn ? (
+          <LoggedInHero student={student!} enrolledCourses={enrolledCourses} />
+        ) : (
         <div className="grid items-center gap-10 rounded-[2.75rem] bg-hero-grid px-8 py-14 text-white shadow-glow lg:grid-cols-[1.08fr_0.92fr] lg:px-12 lg:py-16">
           <div>
             {/* Star rating trust signal */}
@@ -163,6 +175,7 @@ export function HomePage({ courses }: HomePageProps) {
             </div>
           </div>
         </div>
+        )}
       </section>
 
       {/* ── EXAM TRUST STRIP ──────────────────────────────────── */}
@@ -392,6 +405,120 @@ export function HomePage({ courses }: HomePageProps) {
         </div>
       </section>
 
+    </div>
+  );
+}
+
+// ─── Logged-in hero ────────────────────────────────────────────────────────────
+
+type LoggedInHeroProps = {
+  student: { name: string; email: string };
+  enrolledCourses: EnrolledCourseSummary[];
+};
+
+function LoggedInHero({ student, enrolledCourses }: LoggedInHeroProps) {
+  const firstName = student.name.split(" ")[0];
+
+  return (
+    <div className="rounded-[2.75rem] bg-hero-grid px-8 py-12 text-white shadow-glow lg:px-12 lg:py-14">
+      <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+
+        {/* Left — greeting + quick nav */}
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/60">Welcome back</p>
+          <h1 className="mt-3 font-heading text-5xl font-bold tracking-tight sm:text-6xl">
+            Hey, {firstName}! 👋
+          </h1>
+          <p className="mt-4 max-w-xl text-lg leading-8 text-white/80">
+            Pick up where you left off. Your courses, subjects, and live classes are ready.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/dashboard/courses"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-ink transition hover:bg-sand"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              My Dashboard
+            </Link>
+            <Link
+              href="/courses"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+            >
+              Browse More Courses
+            </Link>
+          </div>
+
+          {/* Live class placeholder */}
+          <div className="mt-8 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-5 py-4 backdrop-blur">
+            <Radio className="h-5 w-5 shrink-0 text-green-400" />
+            <div>
+              <p className="text-sm font-semibold text-white">No live class right now</p>
+              <p className="text-xs text-white/60">Your teacher will announce the next session in your course dashboard.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right — enrolled course cards */}
+        <div>
+          {enrolledCourses.length > 0 ? (
+            <div className="space-y-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white/60">
+                Your courses
+              </p>
+              {enrolledCourses.map((ec) => (
+                <Link
+                  key={ec.courseId}
+                  href={`/course/${encodeURIComponent(ec.slug)}/learn`}
+                  className="group flex items-center gap-4 rounded-[1.75rem] border border-white/10 bg-white/10 p-4 backdrop-blur transition hover:bg-white/15"
+                >
+                  {ec.thumbnail ? (
+                    <Image
+                      src={ec.thumbnail}
+                      alt={ec.title}
+                      width={64}
+                      height={64}
+                      className="h-16 w-16 shrink-0 rounded-2xl object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10">
+                      <BookOpen className="h-6 w-6 text-white/60" />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-semibold text-white">{ec.title}</p>
+                    <p className="mt-0.5 text-xs text-white/60">{ec.classLevel ?? "Course"}</p>
+                    {/* Progress bar */}
+                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
+                      <div
+                        className="h-full rounded-full bg-coral transition-all"
+                        style={{ width: `${Math.max(ec.progressPercent > 0 ? 3 : 0, ec.progressPercent)}%` }}
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-white/50">{ec.progressPercent.toFixed(0)}% complete</p>
+                  </div>
+                  <PlayCircle className="h-5 w-5 shrink-0 text-white/40 transition group-hover:text-white" />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-[1.75rem] border border-white/10 bg-white/10 p-7 backdrop-blur">
+              <BookOpen className="h-8 w-8 text-white/50" />
+              <p className="mt-4 font-semibold text-white">No courses yet</p>
+              <p className="mt-2 text-sm text-white/60">
+                Browse our catalog and enroll in a course to get started.
+              </p>
+              <Link
+                href="/courses"
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-coral/90"
+              >
+                Explore Courses
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

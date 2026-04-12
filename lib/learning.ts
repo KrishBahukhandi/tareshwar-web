@@ -130,6 +130,42 @@ function firstRelation<T>(value: T | T[] | null | undefined) {
   return value ?? null;
 }
 
+// Lightweight enrolled-course summary — used on the home page hero
+export type EnrolledCourseSummary = {
+  courseId: string;
+  title: string;
+  classLevel: string | null;
+  thumbnail: string;
+  progressPercent: number;
+  slug: string; // id--slugified-title
+};
+
+export async function getStudentEnrolledCourses(studentId: string): Promise<EnrolledCourseSummary[]> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data: enrollments } = await supabase
+    .from("enrollments")
+    .select("course_id, progress_percent, courses(id, title, class_level, thumbnail_url)")
+    .eq("student_id", studentId)
+    .order("enrolled_at", { ascending: false });
+
+  if (!enrollments) return [];
+
+  return enrollments.map((row) => {
+    const course = Array.isArray(row.courses) ? row.courses[0] : row.courses;
+    const title = (course as { title?: string } | null)?.title ?? "Course";
+    const slug = `${row.course_id}--${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;
+    return {
+      courseId: row.course_id,
+      title,
+      classLevel: (course as { class_level?: string | null } | null)?.class_level ?? null,
+      thumbnail: (course as { thumbnail_url?: string | null } | null)?.thumbnail_url ?? "",
+      progressPercent: Number(row.progress_percent ?? 0),
+      slug,
+    };
+  });
+}
+
 export async function getStudentCourseLearning(courseId: string, studentId: string) {
   const supabase = await createSupabaseServerClient();
   const courseMeta = await getCourseById(courseId);
