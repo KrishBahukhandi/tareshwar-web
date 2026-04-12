@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { signOutStudent } from "@/lib/auth";
+import { STUDY_MATERIAL_DATA } from "@/lib/study-material";
 
 type Props = {
   student: { name: string; email: string } | null;
@@ -13,7 +14,6 @@ type Props = {
 
 const navLinks = [
   { href: "/courses", label: "Courses" },
-  { href: "/teachers", label: "Teachers" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
 ];
@@ -22,6 +22,7 @@ export function MobileNav({ student }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [studyOpen, setStudyOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -51,7 +52,8 @@ export function MobileNav({ student }: Props) {
     .toUpperCase()
     .slice(0, 2) ?? "";
 
-  // Extracted so the JSX fragment + comma don't confuse the parser inside return()
+  const isStudyMaterial = pathname.startsWith("/study-material");
+
   const drawerPortal = mounted ? createPortal(
     <div>
       {/* Backdrop */}
@@ -90,6 +92,63 @@ export function MobileNav({ student }: Props) {
         <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
           {/* Nav links */}
           <nav className="space-y-1">
+            {/* Study Material accordion */}
+            <div>
+              <button
+                onClick={() => setStudyOpen((v) => !v)}
+                className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+                  isStudyMaterial ? "bg-coral/10 text-coral" : "text-ink hover:bg-ink/5"
+                }`}
+              >
+                Study Material
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className={`h-4 w-4 transition-transform ${studyOpen ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                >
+                  <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                </svg>
+              </button>
+
+              {studyOpen && (
+                <div className="ml-4 mt-1 space-y-1 border-l-2 border-ink/8 pl-3">
+                  <Link
+                    href="/study-material"
+                    className="block rounded-xl px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/5 transition"
+                  >
+                    All Study Material
+                  </Link>
+                  {STUDY_MATERIAL_DATA.map((classLevel) => (
+                    <div key={classLevel.id} className="pt-1">
+                      <Link
+                        href={`/study-material/${classLevel.slug}`}
+                        className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/5 transition"
+                      >
+                        <span className="inline-flex rounded-full bg-coral/10 px-2 py-0.5 text-xs font-bold text-coral">
+                          {classLevel.shortName}
+                        </span>
+                        {classLevel.name}
+                      </Link>
+                      <div className="ml-2 space-y-0.5">
+                        {classLevel.subjects.map((subject) => (
+                          <Link
+                            key={subject.id}
+                            href={`/study-material/${classLevel.slug}/${subject.slug}`}
+                            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-slate hover:bg-ink/5 hover:text-ink transition"
+                          >
+                            {subject.icon} {subject.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Regular links */}
             {navLinks.map((link) => (
               <Link
                 key={link.href}
