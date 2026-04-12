@@ -26,9 +26,9 @@ export function CourseDiscovery({ courses }: CourseDiscoveryProps) {
 
     const matchesPrice = (course: Course) => {
       if (selectedPrice === "all") return true;
-      if (selectedPrice === "under-13000") return course.price < 13000;
-      if (selectedPrice === "13000-15000") return course.price >= 13000 && course.price <= 15000;
-      if (selectedPrice === "above-15000") return course.price > 15000;
+      if (selectedPrice === "under-20000") return course.price < 20000;
+      if (selectedPrice === "20000-30000") return course.price >= 20000 && course.price <= 30000;
+      if (selectedPrice === "above-30000") return course.price > 30000;
       return true;
     };
 
@@ -80,9 +80,9 @@ export function CourseDiscovery({ courses }: CourseDiscoveryProps) {
           {/* Price */}
           <FilterSelect label="Price" value={selectedPrice} onChange={setSelectedPrice}>
             <option value="all">All prices</option>
-            <option value="under-13000">Under ₹13,000</option>
-            <option value="13000-15000">₹13,000 – ₹15,000</option>
-            <option value="above-15000">Above ₹15,000</option>
+            <option value="under-20000">Under ₹20,000</option>
+            <option value="20000-30000">₹20,000 – ₹30,000</option>
+            <option value="above-30000">Above ₹30,000</option>
           </FilterSelect>
 
           {/* Class level */}

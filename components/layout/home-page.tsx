@@ -26,6 +26,10 @@ type HomePageProps = {
 
 const EXAM_TAGS = ["Class 8", "Class 9", "Class 10", "Class 11", "Class 12 CBSE", "State Boards"];
 
+// ── Replace "#" below with the real Google Drive direct-download link once you upload the APK ──
+// Format: https://drive.google.com/uc?export=download&id=YOUR_FILE_ID
+const APK_DOWNLOAD_URL = "#";
+
 const HOW_IT_WORKS = [
   {
     step: "01",
@@ -35,7 +39,7 @@ const HOW_IT_WORKS = [
   {
     step: "02",
     title: "Enroll and join your course",
-    desc: "Pay once and get instant access to your course, recorded sessions, student dashboard, and the Flutter app, all activated immediately."
+    desc: "Pay once and get instant access to your course, recorded sessions, student dashboard, and the mobile app — all activated immediately."
   },
   {
     step: "03",
@@ -305,33 +309,30 @@ export function HomePage({ courses }: HomePageProps) {
         </p>
       </section>
 
-      {/* ── FLUTTER APP ───────────────────────────────────────── */}
+      {/* ── APP DOWNLOAD ──────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
         <div className="grid gap-8 rounded-[2.5rem] bg-ink px-8 py-12 text-cream shadow-glow lg:grid-cols-[1fr_0.7fr] lg:items-center">
           <div>
             <span className="inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-cream">
-              Flutter Mobile App
+              App
             </span>
             <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight">
               Download the app. Continue learning from your phone.
             </h2>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-cream/80">
-              A fast, native experience for live classes, recorded lectures, assignments, and progress tracking — built in Flutter, available on Android and iOS.
+              A fast, native experience for live classes, recorded lectures, assignments, and progress tracking — available on Android.
             </p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="/signup"
+            <div className="mt-8">
+              <a
+                href={APK_DOWNLOAD_URL}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-coral px-6 py-3 font-semibold text-white transition hover:bg-coral/90"
               >
                 <Download className="h-4 w-4" />
-                Get on Android
-              </Link>
-              <Link
-                href="/signup"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-3 font-semibold text-cream transition hover:bg-white/5"
-              >
-                Get on iOS
-              </Link>
+                Download for Android
+              </a>
             </div>
           </div>
           <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur">

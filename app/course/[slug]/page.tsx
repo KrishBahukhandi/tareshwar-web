@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BookOpen, Calendar, GraduationCap, Layers3 } from "lucide-react";
 
@@ -157,19 +156,13 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </div>
             </div>
 
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-8">
               <CourseActionButton
                 courseId={course.id}
                 courseTitle={course.title}
                 courseSlug={`${course.id}--${slugifyCourseTitle(course.title)}`}
                 variant="hero"
               />
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
-              >
-                Existing Student Login
-              </Link>
             </div>
           </div>
 

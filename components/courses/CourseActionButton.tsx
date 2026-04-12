@@ -21,6 +21,7 @@ export function CourseActionButton({
   variant,
 }: CourseActionButtonProps) {
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,9 +35,14 @@ export function CourseActionButton({
         } = await supabase.auth.getUser();
 
         if (!user) {
-          if (!cancelled) setLoading(false);
+          if (!cancelled) {
+            setIsLoggedIn(false);
+            setLoading(false);
+          }
           return;
         }
+
+        setIsLoggedIn(true);
 
         const { data: enrollment } = await supabase
           .from("enrollments")
@@ -60,6 +66,7 @@ export function CourseActionButton({
     };
   }, [courseId]);
 
+  // ── Loading state ──────────────────────────────────────────────────────────
   if (loading) {
     if (variant === "hero") {
       return (
@@ -68,7 +75,6 @@ export function CourseActionButton({
         </span>
       );
     }
-
     return (
       <span className="mt-8 inline-flex w-full justify-center rounded-full bg-coral/60 px-6 py-3 font-semibold text-white">
         <Loader2 className="h-4 w-4 animate-spin" />
@@ -76,6 +82,7 @@ export function CourseActionButton({
     );
   }
 
+  // ── Already enrolled → Continue Learning ──────────────────────────────────
   if (isEnrolled) {
     const learnUrl = `/course/${encodeURIComponent(courseSlug)}/learn`;
 
@@ -86,11 +93,7 @@ export function CourseActionButton({
           onClick={() => {
             void trackAnalyticsEvent({
               eventType: "course_continue_click",
-              eventData: {
-                course_id: courseId,
-                course_title: courseTitle,
-                source: "course_hero",
-              },
+              eventData: { course_id: courseId, course_title: courseTitle, source: "course_hero" },
             });
           }}
           className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-ink transition hover:bg-sand"
@@ -107,11 +110,7 @@ export function CourseActionButton({
         onClick={() => {
           void trackAnalyticsEvent({
             eventType: "course_continue_click",
-            eventData: {
-              course_id: courseId,
-              course_title: courseTitle,
-              source: "course_sidebar",
-            },
+            eventData: { course_id: courseId, course_title: courseTitle, source: "course_sidebar" },
           });
         }}
         className="mt-8 inline-flex w-full justify-center rounded-full bg-teal px-6 py-3 font-semibold text-white transition hover:bg-teal/90"
@@ -121,21 +120,22 @@ export function CourseActionButton({
     );
   }
 
-  // Not enrolled — show Enroll button
-  const checkoutUrl = `/checkout/${encodeURIComponent(courseId)}`;
+  // ── Not enrolled ──────────────────────────────────────────────────────────
+  // Logged in → go straight to checkout
+  // Not logged in → go to login/signup with redirect back to checkout
+  const checkoutPath = `/checkout/${encodeURIComponent(courseId)}`;
+  const enrollUrl = isLoggedIn
+    ? checkoutPath
+    : `/login?redirect=${encodeURIComponent(checkoutPath)}`;
 
   if (variant === "hero") {
     return (
       <Link
-        href={checkoutUrl}
+        href={enrollUrl}
         onClick={() => {
           void trackAnalyticsEvent({
             eventType: "course_enroll_click",
-            eventData: {
-              course_id: courseId,
-              course_title: courseTitle,
-              source: "course_hero",
-            },
+            eventData: { course_id: courseId, course_title: courseTitle, source: "course_hero" },
           });
         }}
         className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-ink transition hover:bg-sand"
@@ -148,20 +148,16 @@ export function CourseActionButton({
 
   return (
     <Link
-      href={checkoutUrl}
+      href={enrollUrl}
       onClick={() => {
         void trackAnalyticsEvent({
           eventType: "course_enroll_click",
-          eventData: {
-            course_id: courseId,
-            course_title: courseTitle,
-            source: "course_sidebar",
-          },
+          eventData: { course_id: courseId, course_title: courseTitle, source: "course_sidebar" },
         });
       }}
       className="mt-8 inline-flex w-full justify-center rounded-full bg-coral px-6 py-3 font-semibold text-white transition hover:bg-coral/90"
     >
-      Enroll
+      Enroll Now
     </Link>
   );
 }
