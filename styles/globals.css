@@ -23,6 +23,29 @@ body {
   background: #fffdf8;
 }
 
+.route-transition {
+  animation: route-enter 220ms ease-out;
+  will-change: opacity, transform;
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-transition {
+    animation: none;
+  }
+}
+
 .font-heading {
   font-family: var(--font-heading), sans-serif;
 }
