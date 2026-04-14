@@ -92,6 +92,15 @@ export function MobileNav({ student }: Props) {
         <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
           {/* Nav links */}
           <nav className="space-y-1">
+            <Link
+              href="/"
+              className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+                pathname === "/" ? "bg-coral/10 text-coral" : "text-ink hover:bg-ink/5"
+              }`}
+            >
+              Home
+            </Link>
+
             {/* Study Material accordion */}
             <div>
               <button

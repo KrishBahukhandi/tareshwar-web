@@ -36,6 +36,13 @@ export async function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden items-center gap-7 lg:flex">
+            <Link
+              href="/"
+              className="text-sm font-medium text-slate transition hover:text-ink"
+            >
+              Home
+            </Link>
+
             {/* Study Material mega-dropdown */}
             <div className="group relative">
               <button className="flex items-center gap-1 text-sm font-medium text-slate transition hover:text-ink">
