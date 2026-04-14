@@ -392,13 +392,23 @@ export function HomePage({ courses, student, enrolledCourses = [], nextLiveClass
             Join 12,000+ school students who chose structured coaching over scattered self-study. Current course seats are filling up, so enroll today and lock your spot.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link
-              href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-coral transition hover:bg-sand"
-            >
-              Enroll Now — It&apos;s Free to Start
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard/courses"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-coral transition hover:bg-sand"
+              >
+                Open My Courses
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : (
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-coral transition hover:bg-sand"
+              >
+                Enroll Now — It&apos;s Free to Start
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 font-semibold text-white transition hover:bg-white/10"
@@ -408,7 +418,9 @@ export function HomePage({ courses, student, enrolledCourses = [], nextLiveClass
             </Link>
           </div>
           <p className="mt-6 text-sm text-white/70">
-            Free signup · 7-day refund guarantee · No hidden fees
+            {isLoggedIn
+              ? "Continue your learning journey with your enrolled courses and live sessions."
+              : "Free signup · 7-day refund guarantee · No hidden fees"}
           </p>
         </div>
       </section>

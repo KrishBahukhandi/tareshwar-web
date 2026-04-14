@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { CourseDiscovery } from "@/components/course-card/course-discovery";
 import { PageContainer } from "@/components/layout/page-container";
+import { getCurrentStudent } from "@/lib/auth-server";
 import { getCourses } from "@/lib/courses";
 import { buildMetadata, siteConfig } from "@/lib/seo";
 
@@ -22,7 +23,10 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function CoursesPage() {
-  const courses = await getCourses();
+  const [courses, student] = await Promise.all([
+    getCourses(),
+    getCurrentStudent().catch(() => null),
+  ]);
   const coursesJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -64,14 +68,16 @@ export default async function CoursesPage() {
         <div>
           <h2 className="font-heading text-3xl font-semibold">Not sure where to begin?</h2>
           <p className="mt-3 max-w-2xl text-base text-cream/80">
-            Take our free learning readiness quiz and get a recommended pathway in under 2 minutes.
+            {student
+              ? "Jump back into your enrolled courses and continue building momentum."
+              : "Take our free learning readiness quiz and get a recommended pathway in under 2 minutes."}
           </p>
         </div>
         <Link
-          href="/signup"
+          href={student ? "/dashboard/courses" : "/signup"}
           className="mt-6 inline-flex rounded-full bg-coral px-6 py-3 font-semibold text-white transition hover:bg-coral/90 lg:mt-0"
         >
-          Start Free
+          {student ? "Open My Courses" : "Start Free"}
         </Link>
       </div>
     </PageContainer>
