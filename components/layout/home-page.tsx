@@ -25,10 +25,18 @@ import type { Course } from "@/lib/courses";
 import type { EnrolledCourseSummary } from "@/lib/learning";
 import { testimonials } from "@/lib/site-data";
 
+type NextLiveClass = {
+  title: string;
+  startTime: string;
+  meetingLink: string;
+  courseTitle?: string | null;
+};
+
 type HomePageProps = {
   courses: Course[];
   student?: { id: string; name: string; email: string } | null;
   enrolledCourses?: EnrolledCourseSummary[];
+  nextLiveClass?: NextLiveClass | null;
 };
 
 const EXAM_TAGS = ["Class 8", "Class 9", "Class 10", "Class 11", "Class 12 CBSE", "State Boards"];
@@ -88,7 +96,7 @@ const DIFFERENTIATORS = [
   }
 ];
 
-export function HomePage({ courses, student, enrolledCourses = [] }: HomePageProps) {
+export function HomePage({ courses, student, enrolledCourses = [], nextLiveClass }: HomePageProps) {
   const isLoggedIn = !!student;
 
   return (
@@ -97,7 +105,7 @@ export function HomePage({ courses, student, enrolledCourses = [] }: HomePagePro
       {/* ── HERO — switches based on auth ─────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 pt-10 lg:px-8 lg:pt-16">
         {isLoggedIn ? (
-          <LoggedInHero student={student!} enrolledCourses={enrolledCourses} />
+          <LoggedInHero student={student!} enrolledCourses={enrolledCourses} nextLiveClass={nextLiveClass} />
         ) : (
         <div className="grid items-center gap-10 rounded-[2.75rem] bg-hero-grid px-8 py-14 text-white shadow-glow lg:grid-cols-[1.08fr_0.92fr] lg:px-12 lg:py-16">
           <div>
@@ -414,9 +422,10 @@ export function HomePage({ courses, student, enrolledCourses = [] }: HomePagePro
 type LoggedInHeroProps = {
   student: { name: string; email: string };
   enrolledCourses: EnrolledCourseSummary[];
+  nextLiveClass?: NextLiveClass | null;
 };
 
-function LoggedInHero({ student, enrolledCourses }: LoggedInHeroProps) {
+function LoggedInHero({ student, enrolledCourses, nextLiveClass }: LoggedInHeroProps) {
   const firstName = student.name.split(" ")[0];
 
   return (
@@ -449,14 +458,37 @@ function LoggedInHero({ student, enrolledCourses }: LoggedInHeroProps) {
             </Link>
           </div>
 
-          {/* Live class placeholder */}
-          <div className="mt-8 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-5 py-4 backdrop-blur">
-            <Radio className="h-5 w-5 shrink-0 text-green-400" />
-            <div>
-              <p className="text-sm font-semibold text-white">No live class right now</p>
-              <p className="text-xs text-white/60">Your teacher will announce the next session in your course dashboard.</p>
+          {/* Live class — real or placeholder */}
+          {nextLiveClass ? (
+            <a
+              href={nextLiveClass.meetingLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 flex items-center gap-3 rounded-2xl border border-green-400/30 bg-green-500/15 px-5 py-4 backdrop-blur transition hover:bg-green-500/25"
+            >
+              <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-60" />
+                <Radio className="relative h-4 w-4 text-green-400" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-white">{nextLiveClass.title}</p>
+                <p className="text-xs text-white/70">
+                  {new Date(nextLiveClass.startTime).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                  {nextLiveClass.courseTitle ? ` · ${nextLiveClass.courseTitle}` : ""}
+                  {" — "}
+                  <span className="text-green-300 font-semibold">Join →</span>
+                </p>
+              </div>
+            </a>
+          ) : (
+            <div className="mt-8 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-5 py-4 backdrop-blur">
+              <Radio className="h-5 w-5 shrink-0 text-white/40" />
+              <div>
+                <p className="text-sm font-semibold text-white">No live class right now</p>
+                <p className="text-xs text-white/60">Your teacher will announce the next session in your course dashboard.</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right — enrolled course cards */}

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { HomePage } from "@/components/layout/home-page";
 import { getCourses, STATIC_COURSES } from "@/lib/courses";
 import { getCurrentStudent } from "@/lib/auth-server";
-import { getStudentEnrolledCourses } from "@/lib/learning";
+import { getStudentEnrolledCourses, getNextLiveClass } from "@/lib/learning";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -29,15 +29,19 @@ export default async function Page() {
     getCurrentStudent().catch(() => null),
   ]);
 
-  const enrolledCourses = student
-    ? await getStudentEnrolledCourses(student.id).catch(() => [])
-    : [];
+  const [enrolledCourses, nextLiveClass] = student
+    ? await Promise.all([
+        getStudentEnrolledCourses(student.id).catch(() => []),
+        getNextLiveClass(student.id).catch(() => null),
+      ])
+    : [[], null];
 
   return (
     <HomePage
       courses={courses.length ? courses : STATIC_COURSES}
       student={student}
       enrolledCourses={enrolledCourses}
+      nextLiveClass={nextLiveClass}
     />
   );
 }

@@ -389,3 +389,45 @@ export async function getStudentLecturePageData(lectureId: string, studentId: st
       currentIndex >= 0 && currentIndex < flatLectures.length - 1 ? flatLectures[currentIndex + 1]?.id ?? null : null
   } satisfies LecturePageData;
 }
+
+// ─── Next upcoming live class for a student ────────────────────────────────────
+
+export type NextLiveClassInfo = {
+  title: string;
+  startTime: string;
+  meetingLink: string;
+  courseTitle: string | null;
+};
+
+export async function getNextLiveClass(studentId: string): Promise<NextLiveClassInfo | null> {
+  const supabase = await createSupabaseServerClient();
+
+  // Get enrolled course IDs
+  const { data: enrollments } = await supabase
+    .from("enrollments")
+    .select("course_id")
+    .eq("student_id", studentId);
+
+  const courseIds = (enrollments ?? []).map((e) => e.course_id);
+  if (courseIds.length === 0) return null;
+
+  // Fetch the single soonest upcoming live class
+  const { data } = await supabase
+    .from("live_classes")
+    .select("title, start_time, meeting_link, courses(title)")
+    .in("course_id", courseIds)
+    .gte("start_time", new Date().toISOString())
+    .order("start_time", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  const course = Array.isArray(data.courses) ? data.courses[0] : data.courses;
+  return {
+    title: data.title,
+    startTime: data.start_time,
+    meetingLink: data.meeting_link,
+    courseTitle: (course as { title?: string } | null)?.title ?? null,
+  };
+}

@@ -39,6 +39,8 @@ export function LiveClassCard({
 
         <Link
           href={meetingLink}
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex justify-center rounded-full bg-ink px-6 py-3 font-semibold text-white transition hover:bg-coral"
         >
           Join Class
