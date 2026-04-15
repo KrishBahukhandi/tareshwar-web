@@ -5,6 +5,7 @@
 // The Preview button is <a href="#preview-{id}">.
 // CSS [id]:target shows it. Close button is <a href="#close">.
 
+import { useEffect, useState } from "react";
 import type { StudyMaterial, MaterialType } from "@/lib/study-material";
 import { MATERIAL_TYPE_META } from "@/lib/study-material";
 
@@ -12,18 +13,29 @@ type Props = {
   materials: StudyMaterial[];
 };
 
-function getPreviewUrl(material: StudyMaterial): string {
+function getPreviewUrl(material: StudyMaterial, origin: string): string {
   const url = material.fileUrl;
   if (!url || url === "#") return "";
+  // Build absolute URL so remote viewers (Office Online, Google Docs) can fetch the file
+  const absUrl =
+    url.startsWith("http://") || url.startsWith("https://")
+      ? url
+      : `${origin}${url}`;
   if (material.type === "ppt") {
-    return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+    return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(absUrl)}`;
   }
-  return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(absUrl)}&embedded=true`;
 }
 
 const TYPE_ORDER: MaterialType[] = ["pdf_notes", "question_notes", "ppt", "video"];
 
 export function MaterialsGrid({ materials }: Props) {
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
   const sorted = [...materials].sort(
     (a, b) => TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type)
   );
@@ -79,7 +91,7 @@ export function MaterialsGrid({ materials }: Props) {
       {/* CSS :target modals — one per material, hidden by default, shown when :target */}
       {sorted.map((material) => {
         const meta = MATERIAL_TYPE_META[material.type];
-        const previewUrl = getPreviewUrl(material);
+        const previewUrl = origin ? getPreviewUrl(material, origin) : "";
 
         return (
           <div
@@ -107,15 +119,31 @@ export function MaterialsGrid({ materials }: Props) {
                     <span className="shrink-0 text-xs text-slate">{material.size}</span>
                   )}
                 </div>
-                <a
-                  href="#close"
-                  className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate transition hover:bg-ink/8 hover:text-ink"
-                  aria-label="Close preview"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
-                    <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                  </svg>
-                </a>
+                <div className="ml-4 flex shrink-0 items-center gap-2">
+                  {material.fileUrl && material.fileUrl !== "#" && (
+                    <a
+                      href={material.fileUrl}
+                      download
+                      className="flex items-center gap-1.5 rounded-lg bg-ink/6 px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-ink/10"
+                      title="Download file"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                        <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
+                        <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+                      </svg>
+                      Download
+                    </a>
+                  )}
+                  <a
+                    href="#close"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate transition hover:bg-ink/8 hover:text-ink"
+                    aria-label="Close preview"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+                      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                    </svg>
+                  </a>
+                </div>
               </div>
 
               {/* Preview body */}

@@ -135,7 +135,7 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
             materials: [
               { id: "m17", title: "Chemical Reactions – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "2.1 MB", pageCount: 30 },
               { id: "m18", title: "Chemical Reactions – Question Bank", type: "question_notes", fileUrl: "#", size: "1.4 MB", pageCount: 18 },
-              { id: "m19", title: "Chemical Reactions – PPT Slides", type: "ppt", fileUrl: "#", size: "5.2 MB" },
+              { id: "m19", title: "Chemical Reactions – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch1-chemical-reactions.pptx", size: "794 KB" },
             ],
           },
           {
@@ -146,6 +146,16 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
             materials: [
               { id: "m20", title: "Acids, Bases and Salts – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "1.9 MB", pageCount: 24 },
               { id: "m21", title: "Acids, Bases and Salts – Question Bank", type: "question_notes", fileUrl: "#", size: "1.1 MB", pageCount: 14 },
+              { id: "m21b", title: "Acids, Bases and Salts – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch2-acids-bases-salts.pptx", size: "5.9 MB" },
+            ],
+          },
+          {
+            id: "c10-sci-ch3",
+            slug: "metals-and-non-metals",
+            name: "Metals and Non-Metals",
+            chapterNumber: 3,
+            materials: [
+              { id: "m21c", title: "Metals and Non-Metals – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch3-metals-nonmetals.pptx", size: "455 KB" },
             ],
           },
           {
@@ -156,18 +166,16 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
             materials: [
               { id: "m22", title: "Carbon & Compounds – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "2.3 MB", pageCount: 34 },
               { id: "m23", title: "Carbon & Compounds – Question Bank", type: "question_notes", fileUrl: "#", size: "1.5 MB", pageCount: 20 },
-              { id: "m24", title: "Carbon & Compounds – PPT Slides", type: "ppt", fileUrl: "#", size: "6.1 MB" },
+              { id: "m24", title: "Carbon & Compounds – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch4-carbon-compounds.pptx", size: "2.0 MB" },
             ],
           },
           {
-            id: "c10-sci-ch9",
-            slug: "light-reflection-and-refraction",
-            name: "Light – Reflection and Refraction",
-            chapterNumber: 9,
+            id: "c10-sci-ch5",
+            slug: "periodic-classification-of-elements",
+            name: "Periodic Classification of Elements",
+            chapterNumber: 5,
             materials: [
-              { id: "m25", title: "Light – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "2.4 MB", pageCount: 36 },
-              { id: "m26", title: "Light – Question Bank", type: "question_notes", fileUrl: "#", size: "1.6 MB", pageCount: 22 },
-              { id: "m27", title: "Light – PPT Slides", type: "ppt", fileUrl: "#", size: "7.0 MB" },
+              { id: "m24b", title: "Periodic Classification – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch5-periodic-classification.ppt", size: "1.5 MB" },
             ],
           },
           {
@@ -178,6 +186,54 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
             materials: [
               { id: "m28", title: "Life Processes – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "2.0 MB", pageCount: 28 },
               { id: "m29", title: "Life Processes – Question Bank", type: "question_notes", fileUrl: "#", size: "1.3 MB", pageCount: 16 },
+              { id: "m29b", title: "Life Processes – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch6-life-processes.pptx", size: "25 MB" },
+            ],
+          },
+          {
+            id: "c10-sci-ch7",
+            slug: "control-and-coordination",
+            name: "Control and Coordination",
+            chapterNumber: 7,
+            materials: [
+              { id: "m29c", title: "Control and Coordination – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch7-control-coordination.pptx", size: "13 MB" },
+            ],
+          },
+          {
+            id: "c10-sci-ch8",
+            slug: "how-do-organisms-reproduce",
+            name: "How Do Organisms Reproduce?",
+            chapterNumber: 8,
+            materials: [
+              { id: "m29d", title: "How Do Organisms Reproduce – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch8-how-organisms-reproduce.ppt", size: "4.9 MB" },
+            ],
+          },
+          {
+            id: "c10-sci-ch10",
+            slug: "light-reflection-and-refraction",
+            name: "Light – Reflection and Refraction",
+            chapterNumber: 10,
+            materials: [
+              { id: "m25", title: "Light – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "2.4 MB", pageCount: 36 },
+              { id: "m26", title: "Light – Question Bank", type: "question_notes", fileUrl: "#", size: "1.6 MB", pageCount: 22 },
+              { id: "m27", title: "Light – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch10-light-reflection-refraction.ppsx", size: "516 KB" },
+            ],
+          },
+          {
+            id: "c10-sci-ch13",
+            slug: "magnetic-effects-of-electric-current",
+            name: "Magnetic Effects of Electric Current",
+            chapterNumber: 13,
+            materials: [
+              { id: "m29e", title: "Magnetic Effects of Electric Current – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch13-magnetic-effects.pptx", size: "28 MB" },
+            ],
+          },
+          {
+            id: "c10-sci-ch14",
+            slug: "sources-of-energy",
+            name: "Sources of Energy",
+            chapterNumber: 14,
+            materials: [
+              { id: "m29f", title: "Sources of Energy – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/science/ch14-sources-of-energy.pptx", size: "32 MB" },
             ],
           },
         ],
