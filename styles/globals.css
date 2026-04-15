@@ -68,7 +68,7 @@ textarea {
   z-index: 400;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .material-preview-modal:target {
@@ -89,8 +89,8 @@ textarea {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 900px;
-  max-height: 90vh;
+  height: 88vh;
+  max-width: 1200px;
   background: #fff;
   border-radius: 1.5rem;
   box-shadow: 0 25px 80px rgba(16, 33, 43, 0.25);
