@@ -564,7 +564,6 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
             materials: [
               { id: "m84", title: "Solid State – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "1.9 MB", pageCount: 28 },
               { id: "m85", title: "Solid State – Question Bank", type: "question_notes", fileUrl: "#", size: "1.2 MB", pageCount: 16 },
-              { id: "m86", title: "Solid State – PPT Slides", type: "ppt", fileUrl: "#", size: "5.0 MB" },
             ],
           },
           {
@@ -575,6 +574,7 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
             materials: [
               { id: "m87", title: "Solutions – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "2.0 MB", pageCount: 30 },
               { id: "m88", title: "Solutions – Question Bank", type: "question_notes", fileUrl: "#", size: "1.3 MB", pageCount: 17 },
+              { id: "m87b", title: "Solutions – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch2-solutions.pptx", size: "990 KB" },
             ],
           },
           {
@@ -585,7 +585,79 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
             materials: [
               { id: "m89", title: "Electrochemistry – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "2.2 MB", pageCount: 32 },
               { id: "m90", title: "Electrochemistry – Question Bank", type: "question_notes", fileUrl: "#", size: "1.5 MB", pageCount: 20 },
-              { id: "m91", title: "Electrochemistry – PPT Slides", type: "ppt", fileUrl: "#", size: "5.8 MB" },
+              { id: "m91", title: "Electrochemistry – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch3-electrochemistry.pptx", size: "1.2 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch4",
+            slug: "chemical-kinetics",
+            name: "Chemical Kinetics",
+            chapterNumber: 4,
+            materials: [
+              { id: "m91b", title: "Chemical Kinetics – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch4-chemical-kinetics.pptx", size: "1.4 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch8",
+            slug: "d-and-f-block-elements",
+            name: "d and f Block Elements",
+            chapterNumber: 8,
+            materials: [
+              { id: "m91c", title: "d and f Block Elements – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch8-d-f-block-elements.pptx", size: "16 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch9",
+            slug: "coordination-compounds",
+            name: "Coordination Compounds",
+            chapterNumber: 9,
+            materials: [
+              { id: "m91d", title: "Coordination Compounds – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch9-coordination-compounds.pptx", size: "7.8 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch10",
+            slug: "haloalkanes-and-haloarenes",
+            name: "Haloalkanes and Haloarenes",
+            chapterNumber: 10,
+            materials: [
+              { id: "m91e", title: "Haloalkanes and Haloarenes – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch10-haloalkanes-haloarenes.ppt", size: "41 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch11",
+            slug: "alcohols-phenols-and-ethers",
+            name: "Alcohols, Phenols and Ethers",
+            chapterNumber: 11,
+            materials: [
+              { id: "m91f", title: "Alcohols, Phenols and Ethers – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch11-alcohols-phenols-ethers.pptx", size: "2.6 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch12",
+            slug: "aldehydes-ketones-and-carboxylic-acids",
+            name: "Aldehydes, Ketones and Carboxylic Acids",
+            chapterNumber: 12,
+            materials: [
+              { id: "m91g", title: "Aldehydes, Ketones and Carboxylic Acids – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch12-aldehydes-ketones-carboxylic-acids.pptx", size: "1.8 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch13",
+            slug: "amines",
+            name: "Amines",
+            chapterNumber: 13,
+            materials: [
+              { id: "m91h", title: "Amines – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch13-amines.ppt", size: "3.9 MB" },
+            ],
+          },
+          {
+            id: "c12-chem-ch14",
+            slug: "biomolecules",
+            name: "Biomolecules",
+            chapterNumber: 14,
+            materials: [
+              { id: "m91i", title: "Biomolecules – PPT Slides", type: "ppt", fileUrl: "/study-material/class-12/chemistry/ch14-biomolecules.pptx", size: "48 MB" },
             ],
           },
         ],
