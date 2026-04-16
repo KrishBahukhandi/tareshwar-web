@@ -10,11 +10,18 @@ export type StudyMaterial = {
   description?: string;
 };
 
+export type SubSubject = {
+  id: string;
+  label: string;
+  icon: string;
+};
+
 export type Chapter = {
   id: string;
   slug: string;
   name: string;
   chapterNumber: number;
+  subSubject?: string; // e.g. "civics" | "history" | "geography" | "economics"
   materials: StudyMaterial[];
 };
 
@@ -25,6 +32,7 @@ export type Subject = {
   shortName: string;
   color: string; // tailwind bg class
   icon: string; // emoji
+  subSubjects?: SubSubject[]; // optional sub-subject tabs (e.g. for Social Science)
   chapters: Chapter[];
 };
 
@@ -245,26 +253,106 @@ export const STUDY_MATERIAL_DATA: ClassLevel[] = [
         shortName: "SST",
         color: "bg-yellow-50",
         icon: "🌍",
+        subSubjects: [
+          { id: "history",   label: "History",   icon: "📜" },
+          { id: "geography", label: "Geography", icon: "🗺️" },
+          { id: "civics",    label: "Civics",    icon: "🏛️" },
+          { id: "economics", label: "Economics", icon: "📊" },
+        ],
         chapters: [
+          // ── History ──────────────────────────────────────────
           {
-            id: "c10-sst-ch1",
+            id: "c10-sst-his-ch1",
             slug: "the-rise-of-nationalism-in-europe",
             name: "The Rise of Nationalism in Europe",
             chapterNumber: 1,
+            subSubject: "history",
             materials: [
               { id: "m30", title: "Nationalism in Europe – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "1.7 MB", pageCount: 24 },
               { id: "m31", title: "Nationalism in Europe – Question Bank", type: "question_notes", fileUrl: "#", size: "1.0 MB", pageCount: 12 },
             ],
           },
           {
-            id: "c10-sst-ch2",
+            id: "c10-sst-his-ch2",
             slug: "nationalism-in-india",
             name: "Nationalism in India",
             chapterNumber: 2,
+            subSubject: "history",
             materials: [
               { id: "m32", title: "Nationalism in India – PDF Notes", type: "pdf_notes", fileUrl: "#", size: "1.9 MB", pageCount: 28 },
               { id: "m33", title: "Nationalism in India – Question Bank", type: "question_notes", fileUrl: "#", size: "1.2 MB", pageCount: 14 },
               { id: "m34", title: "Nationalism in India – PPT Slides", type: "ppt", fileUrl: "#", size: "4.3 MB" },
+            ],
+          },
+          // ── Civics ───────────────────────────────────────────
+          {
+            id: "c10-sst-civ-ch1",
+            slug: "power-sharing",
+            name: "Power Sharing",
+            chapterNumber: 1,
+            subSubject: "civics",
+            materials: [
+              { id: "mc1", title: "Power Sharing – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/social-science/civics-c1-power-sharing.pptx", size: "73 KB" },
+            ],
+          },
+          {
+            id: "c10-sst-civ-ch2",
+            slug: "federalism",
+            name: "Federalism",
+            chapterNumber: 2,
+            subSubject: "civics",
+            materials: [
+              { id: "mc2", title: "Federalism – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/social-science/civics-c2-federalism.pptx", size: "2.1 MB" },
+            ],
+          },
+          {
+            id: "c10-sst-civ-ch3",
+            slug: "democracy-and-diversity",
+            name: "Democracy and Diversity",
+            chapterNumber: 3,
+            subSubject: "civics",
+            materials: [
+              { id: "mc3", title: "Democracy and Diversity – PDF Notes", type: "pdf_notes", fileUrl: "/study-material/class-10/social-science/civics-c3-democracy-and-diversity.pdf", size: "784 KB" },
+            ],
+          },
+          {
+            id: "c10-sst-civ-ch4",
+            slug: "gender-religion-and-caste",
+            name: "Gender, Religion and Caste",
+            chapterNumber: 4,
+            subSubject: "civics",
+            materials: [
+              { id: "mc4", title: "Gender, Religion and Caste – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/social-science/civics-c4-gender-religion-caste.pptx", size: "13 MB" },
+            ],
+          },
+          {
+            id: "c10-sst-civ-ch6",
+            slug: "political-parties",
+            name: "Political Parties",
+            chapterNumber: 6,
+            subSubject: "civics",
+            materials: [
+              { id: "mc6", title: "Political Parties – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/social-science/civics-c6-political-parties.pptx", size: "1.0 MB" },
+            ],
+          },
+          {
+            id: "c10-sst-civ-ch7",
+            slug: "outcomes-of-democracy",
+            name: "Outcomes of Democracy",
+            chapterNumber: 7,
+            subSubject: "civics",
+            materials: [
+              { id: "mc7", title: "Outcomes of Democracy – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/social-science/civics-c7-outcomes-of-democracy.pptx", size: "2.6 MB" },
+            ],
+          },
+          {
+            id: "c10-sst-civ-ch8",
+            slug: "challenges-to-democracy",
+            name: "Challenges to Democracy",
+            chapterNumber: 8,
+            subSubject: "civics",
+            materials: [
+              { id: "mc8", title: "Challenges to Democracy – PPT Slides", type: "ppt", fileUrl: "/study-material/class-10/social-science/civics-c8-challenges-to-democracy.pptx", size: "119 KB" },
             ],
           },
         ],
